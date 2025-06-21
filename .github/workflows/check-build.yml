@@ -32,3 +32,6 @@ jobs:
 
       - name: Run Gradle Build
         run: ./gradlew build
+        env:
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
