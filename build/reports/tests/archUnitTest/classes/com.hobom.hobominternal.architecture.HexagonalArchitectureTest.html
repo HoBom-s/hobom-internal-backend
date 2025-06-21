@@ -29,7 +29,7 @@
 </td>
 <td>
 <div class="infoBox" id="failures">
-<div class="counter">6</div>
+<div class="counter">5</div>
 <p>failures</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.429s</div>
+<div class="counter">0.603s</div>
 <p>duration</p>
 </div>
 </td>
@@ -51,7 +51,7 @@
 </td>
 <td>
 <div class="infoBox failures" id="successRate">
-<div class="percent">14%</div>
+<div class="percent">28%</div>
 <p>successful</p>
 </div>
 </td>
@@ -73,30 +73,20 @@
 <div class="tab">
 <h2>Failed tests</h2>
 <div class="test">
-<a name="Adapters are dependency sinks"></a>
-<h3 class="failures">Adapters are dependency sinks</h3>
-<span class="code">
-<pre>java.lang.AssertionError: Rule 'no classes that reside in any package ['..domain..', '..application..', '..config..'] should depend on classes that reside in any package ['..adapter..']' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can either use `ArchRule.allowEmptyShould(true)` on a single rule or set the configuration property `archRule.failOnEmptyShould = false` to change the behavior globally.
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.verifyNoEmptyShouldIfEnabled(ArchRule.java:201)
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.evaluate(ArchRule.java:181)
-	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:84)
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.check(ArchRule.java:165)
-	at com.tngtech.archunit.lang.syntax.ObjectsShouldInternal.check(ObjectsShouldInternal.java:81)
-	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:167)
-	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:150)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-</pre>
-</span>
-</div>
-<div class="test">
 <a name="Application depends only on domain and standard libraries"></a>
 <h3 class="failures">Application depends only on domain and standard libraries</h3>
 <span class="code">
-<pre>java.lang.AssertionError: Rule 'classes that reside in a package '..application..' should only depend on classes that reside in any package ['..application..', '..domain..', 'java..', 'javax..', 'kotlin..', 'org.jetbrains..']' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can either use `ArchRule.allowEmptyShould(true)` on a single rule or set the configuration property `archRule.failOnEmptyShould = false` to change the behavior globally.
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.verifyNoEmptyShouldIfEnabled(ArchRule.java:201)
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.evaluate(ArchRule.java:181)
-	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:84)
+<pre>java.lang.AssertionError: Architecture Violation [Priority: MEDIUM] - Rule 'classes that reside in a package '..application..' should only depend on classes that reside in any package ['..application..', '..domain..', 'java..', 'javax..', 'kotlin..', 'org.jetbrains..']' was violated (8 times):
+Class &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService&gt; implements interface &lt;com.hobom.hobominternal.port.inbound.log.SaveBulkLogUseCase&gt; in (SaveBulkLogService.kt:0)
+Class &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService&gt; is annotated with &lt;org.springframework.stereotype.Service&gt; in (SaveBulkLogService.kt:0)
+Constructor &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.&lt;init&gt;(com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPort)&gt; has parameter of type &lt;com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPort&gt; in (SaveBulkLogService.kt:0)
+Field &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.saveHoBomLogPort&gt; has type &lt;com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPort&gt; in (SaveBulkLogService.kt:0)
+Method &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.invoke(java.util.List)&gt; has annotation member of type &lt;org.springframework.transaction.annotation.Isolation&gt; in (SaveBulkLogService.kt:0)
+Method &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.invoke(java.util.List)&gt; has annotation member of type &lt;org.springframework.transaction.annotation.Propagation&gt; in (SaveBulkLogService.kt:0)
+Method &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.invoke(java.util.List)&gt; is annotated with &lt;org.springframework.transaction.annotation.Transactional&gt; in (SaveBulkLogService.kt:0)
+Method &lt;com.hobom.hobominternal.application.service.log.SaveBulkLogService.saveBulkLog(java.util.List)&gt; calls method &lt;com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPort.saveAll(java.util.List)&gt; in (SaveBulkLogService.kt:20)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.assertNoViolation(ArchRule.java:94)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:86)
 	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.check(ArchRule.java:165)
 	at com.tngtech.archunit.lang.syntax.ObjectsShouldInternal.check(ObjectsShouldInternal.java:81)
 	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:167)
@@ -107,13 +97,15 @@
 </span>
 </div>
 <div class="test">
-<a name="Domain must be independent"></a>
-<h3 class="failures">Domain must be independent</h3>
+<a name="Config must not leak"></a>
+<h3 class="failures">Config must not leak</h3>
 <span class="code">
-<pre>java.lang.AssertionError: Rule 'no classes that reside in a package '..domain..' should depend on classes that reside in any package ['..application..', '..adapter..']' failed to check any classes. This means either that no classes have been passed to the rule at all, or that no classes passed to the rule matched the `that()` clause. To allow rules being evaluated without checking any classes you can either use `ArchRule.allowEmptyShould(true)` on a single rule or set the configuration property `archRule.failOnEmptyShould = false` to change the behavior globally.
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.verifyNoEmptyShouldIfEnabled(ArchRule.java:201)
-	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.evaluate(ArchRule.java:181)
-	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:84)
+<pre>java.lang.AssertionError: Architecture Violation [Priority: MEDIUM] - Rule 'no classes that reside outside of package '..config..' should depend on classes that reside in a package '..config..'' was violated (3 times):
+Class &lt;com.hobom.hobominternal.domain.log.HoBomLogLevel&gt; implements interface &lt;com.hobom.hobominternal.config.DescribableEnum&gt; in (HoBomLogLevel.kt:0)
+Class &lt;com.hobom.hobominternal.domain.service.HttpMethodType&gt; implements interface &lt;com.hobom.hobominternal.config.DescribableEnum&gt; in (HttpMethodType.kt:0)
+Class &lt;com.hobom.hobominternal.domain.service.ServiceType&gt; implements interface &lt;com.hobom.hobominternal.config.DescribableEnum&gt; in (ServiceType.kt:0)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.assertNoViolation(ArchRule.java:94)
+	at com.tngtech.archunit.lang.ArchRule$Assertions.check(ArchRule.java:86)
 	at com.tngtech.archunit.lang.ArchRule$Factory$SimpleArchRule.check(ArchRule.java:165)
 	at com.tngtech.archunit.lang.syntax.ObjectsShouldInternal.check(ObjectsShouldInternal.java:81)
 	at com.tngtech.archunit.junit.internal.ArchUnitTestDescriptor$ArchUnitRuleDescriptor.execute(ArchUnitTestDescriptor.java:167)
@@ -186,24 +178,24 @@
 </tr>
 </thead>
 <tr>
-<td class="failures">Adapters are dependency sinks</td>
-<td class="failures">0.001s</td>
-<td class="failures">failed</td>
-</tr>
-<tr>
-<td class="failures">Application depends only on domain and standard libraries</td>
-<td class="failures">0s</td>
-<td class="failures">failed</td>
-</tr>
-<tr>
-<td class="success">Config must not leak</td>
-<td class="success">0.005s</td>
+<td class="success">Adapters are dependency sinks</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="failures">Domain must be independent</td>
-<td class="failures">0.422s</td>
+<td class="failures">Application depends only on domain and standard libraries</td>
+<td class="failures">0.005s</td>
 <td class="failures">failed</td>
+</tr>
+<tr>
+<td class="failures">Config must not leak</td>
+<td class="failures">0.004s</td>
+<td class="failures">failed</td>
+</tr>
+<tr>
+<td class="success">Domain must be independent</td>
+<td class="success">0.590s</td>
+<td class="success">passed</td>
 </tr>
 <tr>
 <td class="failures">Inbound adapters must follow naming convention</td>
@@ -212,12 +204,12 @@
 </tr>
 <tr>
 <td class="failures">Inbound ports should be single-method interfaces</td>
-<td class="failures">0s</td>
+<td class="failures">0.001s</td>
 <td class="failures">failed</td>
 </tr>
 <tr>
 <td class="failures">Outbound adapters must follow naming convention</td>
-<td class="failures">0.001s</td>
+<td class="failures">0s</td>
 <td class="failures">failed</td>
 </tr>
 </table>
@@ -225,7 +217,7 @@
 <div class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>13:17:04.142 [Test worker] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.10
+<pre>22:34:40.473 [Test worker] INFO com.tngtech.archunit.core.PluginLoader -- Detected Java version 17.0.10
 </pre>
 </span>
 </div>
@@ -237,7 +229,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="https://www.gradle.org">Gradle 8.14.2</a> at 2025. 6. 21. 오후 1:17:04</p>
+<a href="https://www.gradle.org">Gradle 8.14.2</a> at 2025. 6. 21. 오후 10:34:41</p>
 </div>
 </div>
 </body>

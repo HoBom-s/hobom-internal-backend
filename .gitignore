@@ -1,2 +1,12 @@
 # IDE
 .idea
+
+# Gradle
+.gradle/
+build/
+!**/src/**/build.gradle*
+
+# Kotlin
+*.class
+*.jar
+*.war

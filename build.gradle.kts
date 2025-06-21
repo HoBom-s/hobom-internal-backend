@@ -48,17 +48,30 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
 
     // test implementation
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        // for mockk
+        exclude(module = "mockito-core")
+    }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // mockk
+    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 
     // swagger
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     // validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // kafka
+    implementation("org.springframework.kafka:spring-kafka")
+
+    // Jackson
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 }
 
 dependencyManagement {
@@ -83,16 +96,6 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.register<Test>("archUnitTest") {
-    description = "Run all ArchUnit tests under com.hobom.hobominternal"
-    group = "verification"
-
-    useJUnitPlatform()
-
-    include("**/*ArchitectureTest.class")
-    testClassesDirs = sourceSets["test"].output.classesDirs
-    classpath = sourceSets["test"].runtimeClasspath
-}
 tasks.register("formatKotlin") {
     group = "formatting"
     description = "Formats all Kotlin source files using Spotless"
