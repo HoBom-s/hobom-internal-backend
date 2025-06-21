@@ -31,10 +31,4 @@ jobs:
             ${{ runner.os }}-gradle
 
       - name: Run ktlint
-        run: ./gradlew ktlintCheck
-
-      - name: Run detekt
-        run: ./gradlew detekt
-
-      - name: Run spotlessCheck
-        run: ./gradlew spotlessCheck
+        run: ./gradlew lintKotlin
