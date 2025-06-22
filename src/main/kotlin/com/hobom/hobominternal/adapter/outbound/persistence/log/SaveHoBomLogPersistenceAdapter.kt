@@ -1,14 +1,14 @@
 package com.hobom.hobominternal.adapter.outbound.persistence.log
 
 import com.hobom.hobominternal.domain.log.HoBomLogModel
-import com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPort
+import com.hobom.hobominternal.port.outbound.log.SaveHoBomLogPersistencePort
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class SaveHoBomLogAdapter(
+class SaveHoBomLogPersistenceAdapter(
     private val jdbcTemplate: NamedParameterJdbcTemplate,
-) : SaveHoBomLogPort {
+) : SaveHoBomLogPersistencePort {
     override fun saveAll(logs: List<HoBomLogModel>) {
         with(jdbcTemplate) {
             batchUpdate(createSqlSyntax(), HoBomLogSqlMapper.map(logs))

@@ -1,12 +1,15 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
+    kotlin("plugin.jpa") version "1.9.25"
 
     id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "6.21.0"
-
-    kotlin("plugin.jpa") version "1.9.25"
+    id("nu.studer.jooq") version "9.0"
 }
 
 spotless {
@@ -24,12 +27,64 @@ spotless {
     }
 }
 
+val jooqVersion = "3.20.5"
+
+jooq {
+    version.set(jooqVersion)
+    configurations {
+        create("main") {
+            jooqConfiguration.apply {
+                jdbc.apply {
+                    driver = "com.mysql.cj.jdbc.Driver"
+                    url = "jdbc:mysql://localhost:3306/bear" // dummy
+                    user = "" // set dynamically
+                    password = "" // set dynamically
+                }
+                generator.apply {
+                    name = "org.jooq.codegen.DefaultGenerator"
+                    database.apply {
+                        name = "org.jooq.meta.mysql.MySQLDatabase"
+                        inputSchema = "bear"
+                    }
+                    target.apply {
+                        packageName = "com.example.jooq.generated"
+                        directory = "$buildDir/generated/jooq"
+                    }
+                    generate.apply {
+                        isDaos = false
+                        isPojos = true
+                        isImmutablePojos = true
+                        isFluentSetters = true
+                    }
+                }
+            }
+        }
+    }
+}
+
+tasks.named("generateJooq") {
+    doFirst {
+        val envFile = rootProject.file(".env")
+        if (envFile.exists()) {
+            val props = Properties()
+            props.load(FileInputStream(rootProject.file(".env")))
+            props.load(envFile.inputStream())
+            val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
+                .configurations.getByName("main").jooqConfiguration
+            jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: error("Missing DB_USER in .env")
+            jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: error("Missing DB_PASSWORD in .env")
+        } else {
+            error(".env file not found. Required for generateJooq.")
+        }
+    }
+}
+
 group = "com.hobom"
 version = "0.0.1-SNAPSHOT"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -42,36 +97,36 @@ extra["springCloudVersion"] = "2025.0.0"
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.kafka:spring-kafka")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+
+    implementation("org.springframework.boot:spring-boot-starter-jooq")
+    implementation("org.jooq:jooq:$jooqVersion")
+
     runtimeOnly("com.mysql:mysql-connector-j")
 
-    // test implementation
+    // jOOQ Codegen runtime
+    jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
+    jooqGenerator("org.jooq:jooq-meta:$jooqVersion")
+    jooqGenerator("org.jooq:jooq:$jooqVersion")
+    jooqGenerator("com.mysql:mysql-connector-j:8.2.0")
+
+    // test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        // for mockk
         exclude(module = "mockito-core")
     }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    // mockk
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("io.kotest:kotest-assertions-core:5.8.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-
-    // swagger
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-
-    // validation
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-
-    // kafka
-    implementation("org.springframework.kafka:spring-kafka")
-
-    // Jackson
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 }
 
 dependencyManagement {
@@ -99,13 +154,13 @@ tasks.withType<Test> {
 tasks.register("formatKotlin") {
     group = "formatting"
     description = "Formats all Kotlin source files using Spotless"
-
     dependsOn("spotlessApply")
 }
 
 tasks.register("lintKotlin") {
     group = "formatting"
     description = "Checks Kotlin code style using Spotless"
-
     dependsOn("spotlessCheck")
 }
+
+sourceSets["main"].java.srcDir("$buildDir/generated/jooq")
