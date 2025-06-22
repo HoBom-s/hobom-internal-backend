@@ -19,3 +19,5 @@ build/
 
 # Include all build.gradle or build.gradle.kts files
 !**/build.gradle*
+
+.env
