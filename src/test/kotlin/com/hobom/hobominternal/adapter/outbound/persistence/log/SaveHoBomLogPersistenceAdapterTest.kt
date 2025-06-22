@@ -11,9 +11,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.Instant
 
-class SaveHoBomLogAdapterTest {
+class SaveHoBomLogPersistenceAdapterTest {
     private val jdbcTemplate: NamedParameterJdbcTemplate = mockk(relaxed = true)
-    private val adapter = SaveHoBomLogAdapter(jdbcTemplate)
+    private val adapter = SaveHoBomLogPersistenceAdapter(jdbcTemplate)
 
     @Test
     fun `should call jdbcTemplate batchUpdate in SaveHoBomLogAdapter`() {
