@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController
 class SearchHoBomLogController(
     private val searchHoBomLogUseCase: SearchHoBomLogUseCase,
 ) {
-    @Operation(summary = "로그 목록 검색", description = "검색 조건과 페이징 정보를 기반으로 로그 목록을 조회합니다.")
+    @Operation(summary = "Filter logs", description = "With pagination")
     @GetMapping("/logs")
     fun search(
         @ParameterObject
