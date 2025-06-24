@@ -3,8 +3,8 @@
 // import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 // import com.hobom.hobominternal.application.command.log.SaveLogCommand
 // import com.hobom.hobominternal.domain.log.HoBomLogLevel
-// import com.hobom.hobominternal.domain.service.HttpMethodType
-// import com.hobom.hobominternal.domain.service.ServiceType
+// import com.hobom.hobominternal.domain.log.HttpMethodType
+// import com.hobom.hobominternal.domain.log.ServiceType
 // import org.junit.jupiter.api.Test
 // import org.springframework.boot.test.context.SpringBootTest
 // import org.springframework.kafka.core.KafkaTemplate
@@ -15,7 +15,6 @@
 // class KafkaHoBomLogProducerTest(
 //    private val kafkaTemplate: KafkaTemplate<String, String>,
 // ) {
-//
 //    @Test
 //    fun `Kafka send HoBomLogs`() {
 //        val logCommand = SaveLogCommand(

@@ -1,9 +1,9 @@
 package com.hobom.hobominternal.application.command.log
 
+import com.hobom.hobominternal.domain.log.HoBomLog
 import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HoBomLogModel
-import com.hobom.hobominternal.domain.service.HttpMethodType
-import com.hobom.hobominternal.domain.service.ServiceType
+import com.hobom.hobominternal.domain.log.HttpMethodType
+import com.hobom.hobominternal.domain.log.ServiceType
 import java.time.Instant
 
 data class SaveLogCommand(
@@ -19,7 +19,7 @@ data class SaveLogCommand(
     val payload: Map<String, Any>?,
 )
 
-fun SaveLogCommand.toModel(): HoBomLogModel = HoBomLogModel(
+fun SaveLogCommand.toModel(): HoBomLog = HoBomLog(
     serviceType = serviceType,
     level = level,
     traceId = traceId,

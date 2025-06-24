@@ -1,24 +1,24 @@
 package com.hobom.hobominternal.adapter.outbound.persistence.log
 
+import com.hobom.hobominternal.domain.log.HoBomLog
+import com.hobom.hobominternal.domain.log.HoBomLogJdbcRepository
 import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HoBomLogModel
-import com.hobom.hobominternal.domain.service.HttpMethodType
-import com.hobom.hobominternal.domain.service.ServiceType
+import com.hobom.hobominternal.domain.log.HttpMethodType
+import com.hobom.hobominternal.domain.log.ServiceType
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import java.time.Instant
 
 class SaveHoBomLogPersistenceAdapterTest {
-    private val jdbcTemplate: NamedParameterJdbcTemplate = mockk(relaxed = true)
-    private val adapter = SaveHoBomLogPersistenceAdapter(jdbcTemplate)
+
+    private val mockRepository: HoBomLogJdbcRepository = mockk(relaxed = true)
+    private val adapter = SaveHoBomLogPersistenceAdapter(mockRepository)
 
     @Test
-    fun `should call jdbcTemplate batchUpdate in SaveHoBomLogAdapter`() {
+    fun `should call repository batchInsert in SaveHoBomLogPersistenceAdapter`() {
         val logs = listOf(
-            HoBomLogModel(
+            HoBomLog(
                 serviceType = ServiceType.HOBOM_BACKEND,
                 level = HoBomLogLevel.INFO,
                 traceId = "abc-123",
@@ -36,7 +36,7 @@ class SaveHoBomLogPersistenceAdapterTest {
         adapter.saveAll(logs)
 
         verify(exactly = 1) {
-            jdbcTemplate.batchUpdate(any(), any<Array<MapSqlParameterSource>>())
+            mockRepository.batchInsert(logs)
         }
     }
 }

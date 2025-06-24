@@ -1,4 +1,4 @@
-package com.hobom.hobominternal.domain.service
+package com.hobom.hobominternal.domain.log
 
 import com.hobom.hobominternal.config.DescribableEnum
 

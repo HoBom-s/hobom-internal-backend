@@ -2,9 +2,8 @@ package com.hobom.hobominternal.port.inbound.log
 
 import com.hobom.hobominternal.adapter.outbound.query.log.HoBomLogQueryResult
 import com.hobom.hobominternal.domain.log.HoBomLogSearchCriteria
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import com.hobom.hobominternal.shared.page.QueryResult
 
 interface SearchHoBomLogUseCase {
-    fun invoke(criteria: HoBomLogSearchCriteria, pageable: Pageable): Page<HoBomLogQueryResult>
+    fun invoke(criteria: HoBomLogSearchCriteria, page: Int, size: Int): QueryResult<HoBomLogQueryResult>
 }
