@@ -58,7 +58,6 @@ class HoBomLogSqlMapperTest {
         record.createdAt = now
         record.updatedAt = now
 
-
         val result = HoBomLogSqlMapper.fromRecord(record)
         val expectedInstant = now.atZone(ZoneId.systemDefault()).toInstant()
 

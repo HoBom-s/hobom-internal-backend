@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class SearchHoBomLogService(
-        private val hobomLogQueryPort: SearchHoBomLogQueryPort,
+    private val hobomLogQueryPort: SearchHoBomLogQueryPort,
 ) : SearchHoBomLogUseCase {
     override fun invoke(criteria: HoBomLogSearchCriteria, page: Int, size: Int): QueryResult<HoBomLogQueryResult> {
         return findBy(criteria, page, size)
