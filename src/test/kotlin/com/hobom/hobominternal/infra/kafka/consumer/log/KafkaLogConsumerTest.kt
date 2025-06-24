@@ -3,8 +3,8 @@ package com.hobom.hobominternal.infra.kafka.consumer.log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hobom.hobominternal.application.command.log.SaveLogCommand
 import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.service.HttpMethodType
-import com.hobom.hobominternal.domain.service.ServiceType
+import com.hobom.hobominternal.domain.log.HttpMethodType
+import com.hobom.hobominternal.domain.log.ServiceType
 import com.hobom.hobominternal.port.inbound.log.SaveBulkLogUseCase
 import io.mockk.Runs
 import io.mockk.every

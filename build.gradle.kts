@@ -4,7 +4,6 @@ import java.util.Properties
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
-    kotlin("plugin.jpa") version "1.9.25"
 
     id("org.springframework.boot") version "3.5.3"
     id("io.spring.dependency-management") version "1.1.7"
@@ -36,9 +35,9 @@ jooq {
             jooqConfiguration.apply {
                 jdbc.apply {
                     driver = "com.mysql.cj.jdbc.Driver"
-                    url = "jdbc:mysql://localhost:3306/bear" // dummy
-                    user = "" // set dynamically
-                    password = "" // set dynamically
+                    url = "jdbc:mysql://localhost:3306/bear?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul"
+                    user = ""
+                    password = ""
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
@@ -95,20 +94,18 @@ repositories {
 extra["springCloudVersion"] = "2025.0.0"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("mysql:mysql-connector-java:8.0.33")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
-
-    runtimeOnly("com.mysql:mysql-connector-j")
 
     // jOOQ Codegen runtime
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
@@ -127,6 +124,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("io.kotest:kotest-assertions-core:5.8.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+    testImplementation("com.mysql:mysql-connector-j:8.2.0")
 }
 
 dependencyManagement {

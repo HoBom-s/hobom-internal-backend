@@ -1,8 +1,8 @@
 package com.hobom.hobominternal.adapter.inbound.dto.log
 
 import com.hobom.hobominternal.domain.log.HoBomLogSearchCriteria
-import com.hobom.hobominternal.domain.service.HttpMethodType
-import com.hobom.hobominternal.domain.service.ServiceType
+import com.hobom.hobominternal.domain.log.HttpMethodType
+import com.hobom.hobominternal.domain.log.ServiceType
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.Instant
 
