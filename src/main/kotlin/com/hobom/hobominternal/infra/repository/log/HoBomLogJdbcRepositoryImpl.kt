@@ -2,7 +2,6 @@ package com.hobom.hobominternal.infra.repository.log
 
 import com.hobom.hobominternal.domain.log.HoBomLog
 import com.hobom.hobominternal.domain.log.HoBomLogJdbcRepository
-import com.hobom.hobominternal.domain.log.HoBomLogSqlMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 

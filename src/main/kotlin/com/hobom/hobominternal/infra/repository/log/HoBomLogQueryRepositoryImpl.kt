@@ -5,7 +5,6 @@ import com.hobom.hobominternal.domain.log.HoBomLog
 import com.hobom.hobominternal.domain.log.HoBomLogId
 import com.hobom.hobominternal.domain.log.HoBomLogQueryRepository
 import com.hobom.hobominternal.domain.log.HoBomLogSearchCriteria
-import com.hobom.hobominternal.domain.log.HoBomLogSqlMapper
 import com.hobom.hobominternal.domain.log.toConditions
 import com.hobom.hobominternal.exception.HoBomLogNotFoundException
 import com.hobom.hobominternal.shared.page.QueryResult
