@@ -5,6 +5,7 @@
 // import com.hobom.hobominternal.domain.log.HoBomLogLevel
 // import com.hobom.hobominternal.domain.log.HttpMethodType
 // import com.hobom.hobominternal.domain.log.ServiceType
+// import com.hobom.hobominternal.shared.kafka.KafkaTopics
 // import org.junit.jupiter.api.Test
 // import org.springframework.boot.test.context.SpringBootTest
 // import org.springframework.kafka.core.KafkaTemplate
@@ -31,7 +32,7 @@
 //        )
 //        val json = jacksonObjectMapper().writeValueAsString(logCommand)
 //
-//        kafkaTemplate.send("hobom.logs", json)
+//        kafkaTemplate.send(KafkaTopics.HoBomLogs.TOPIC, json)
 //        kafkaTemplate.flush()
 //
 //        // if you want to check consume function

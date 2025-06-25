@@ -6,6 +6,7 @@ import com.hobom.hobominternal.domain.log.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.HttpMethodType
 import com.hobom.hobominternal.domain.log.ServiceType
 import com.hobom.hobominternal.port.inbound.log.SaveBulkLogUseCase
+import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -41,7 +42,7 @@ class KafkaLogConsumerTest {
             payload = mapOf("key" to "value"),
         )
         val json = jacksonObjectMapper().writeValueAsString(payload)
-        val record = ConsumerRecord("hobom.logs", 0, 0L, "key", json)
+        val record = ConsumerRecord(KafkaTopics.HoBomLogs.TOPIC, 0, 0L, "key", json)
 
         repeat(100) {
             consumer.handle(record)
