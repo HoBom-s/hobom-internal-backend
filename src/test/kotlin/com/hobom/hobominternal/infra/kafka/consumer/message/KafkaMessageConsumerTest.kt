@@ -3,8 +3,8 @@ package com.hobom.hobominternal.infra.kafka.consumer.message
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.hobom.hobominternal.adapter.inbound.kafka.message.SaveHoBomMessageHandler
 import com.hobom.hobominternal.domain.message.MessageType
-import com.hobom.hobominternal.port.inbound.message.SaveHoBomMessageDeliveryHistoryUseCase
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.mockk
 import io.mockk.verify
@@ -16,8 +16,8 @@ class KafkaMessageConsumerTest {
     private val objectMapper = ObjectMapper()
         .registerModule(JavaTimeModule())
         .registerModule(KotlinModule.Builder().build())
-    private val useCase = mockk<SaveHoBomMessageDeliveryHistoryUseCase>(relaxed = true)
-    private val consumer = KafkaMessageConsumer(useCase, objectMapper)
+    private val handler = mockk<SaveHoBomMessageHandler>(relaxed = true)
+    private val consumer = KafkaMessageConsumer(objectMapper, handler)
 
     @Test
     fun `handle should parse message and invoke use case`() {
@@ -31,12 +31,12 @@ class KafkaMessageConsumerTest {
               "sentAt": "2025-06-25T13:30:00Z"
             }
         """.trimIndent()
-
         val record = ConsumerRecord<String, String>(KafkaTopics.HoBomMessages.TOPIC, 0, 0L, null, json)
-        consumer.handle(record)
+
+        consumer.consume(record)
 
         verify {
-            useCase.invoke(
+            handler.handle(
                 withArg { command ->
                     assert(command.type == MessageType.PUSH_MESSAGE)
                     assert(command.title == "Today's Menu")
