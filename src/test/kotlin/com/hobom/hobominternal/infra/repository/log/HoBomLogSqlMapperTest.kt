@@ -1,9 +1,8 @@
-package com.hobom.hobominternal.adapter.outbound.persistence.log
+package com.hobom.hobominternal.infra.repository.log
 
 import com.example.jooq.generated.tables.records.HobomLogsRecord
 import com.hobom.hobominternal.domain.log.HoBomLog
 import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HoBomLogSqlMapper
 import com.hobom.hobominternal.domain.log.HttpMethodType
 import com.hobom.hobominternal.domain.log.ServiceType
 import org.assertj.core.api.Assertions.assertThat
