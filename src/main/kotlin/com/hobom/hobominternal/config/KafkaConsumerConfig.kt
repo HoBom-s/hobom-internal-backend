@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableKafka
 @EnableScheduling
 @Configuration
-class KafkaConfig(
+class KafkaConsumerConfig(
     private val kafkaProperties: KafkaProperties,
 ) {
 

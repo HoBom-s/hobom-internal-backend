@@ -1,21 +1,21 @@
-// package com.hobom.hobominternal.infra.kafka.producer
+//package com.hobom.hobominternal.infra.kafka.producer.log
 //
-// import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-// import com.hobom.hobominternal.application.command.log.SaveLogCommand
-// import com.hobom.hobominternal.domain.log.HoBomLogLevel
-// import com.hobom.hobominternal.domain.log.HttpMethodType
-// import com.hobom.hobominternal.domain.log.ServiceType
-// import com.hobom.hobominternal.shared.kafka.KafkaTopics
-// import org.junit.jupiter.api.Test
-// import org.springframework.boot.test.context.SpringBootTest
-// import org.springframework.kafka.core.KafkaTemplate
-// import org.springframework.test.context.TestConstructor
+//import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+//import com.hobom.hobominternal.application.command.log.SaveLogCommand
+//import com.hobom.hobominternal.domain.log.HoBomLogLevel
+//import com.hobom.hobominternal.domain.log.HttpMethodType
+//import com.hobom.hobominternal.domain.log.ServiceType
+//import com.hobom.hobominternal.shared.kafka.KafkaTopics
+//import org.junit.jupiter.api.Test
+//import org.springframework.boot.test.context.SpringBootTest
+//import org.springframework.kafka.core.KafkaTemplate
+//import org.springframework.test.context.TestConstructor
 //
-// @SpringBootTest
-// @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-// class KafkaHoBomLogProducerTest(
+//@SpringBootTest
+//@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+//class KafkaHoBomLogProducerTest(
 //    private val kafkaTemplate: KafkaTemplate<String, String>,
-// ) {
+//) {
 //    @Test
 //    fun `Kafka send HoBomLogs`() {
 //        val logCommand = SaveLogCommand(
@@ -38,4 +38,4 @@
 //        // if you want to check consume function
 //        Thread.sleep(5000)
 //    }
-// }
+//}
