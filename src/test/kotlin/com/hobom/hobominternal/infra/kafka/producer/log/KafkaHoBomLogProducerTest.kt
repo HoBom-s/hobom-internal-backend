@@ -31,7 +31,7 @@
 //        )
 //        val json = jacksonObjectMapper().writeValueAsString(logCommand)
 //
-//        kafkaTemplate.send("hobom-logs", json)
+//        kafkaTemplate.send("hobom.logs", json)
 //        kafkaTemplate.flush()
 //
 //        // if you want to check consume function

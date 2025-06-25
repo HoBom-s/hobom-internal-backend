@@ -41,7 +41,7 @@ class KafkaLogConsumerTest {
             payload = mapOf("key" to "value"),
         )
         val json = jacksonObjectMapper().writeValueAsString(payload)
-        val record = ConsumerRecord("hobom-logs", 0, 0L, "key", json)
+        val record = ConsumerRecord("hobom.logs", 0, 0L, "key", json)
 
         repeat(100) {
             consumer.handle(record)

@@ -23,7 +23,7 @@ class KafkaLogConsumer(
     private val buffer: MutableList<SaveLogCommand> = Collections.synchronizedList(mutableListOf())
 
     @KafkaListener(
-        topics = ["hobom-logs"],
+        topics = ["hobom.logs"],
         groupId = "log-consumer-group",
         autoStartup = "true",
     )
