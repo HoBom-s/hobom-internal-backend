@@ -26,7 +26,7 @@ object HoBomLogSqlMapper {
     }.toTypedArray()
 
     fun fromRecord(record: HobomLogsRecord): HoBomLog = HoBomLog(
-        id = record[HOBOM_LOGS.ID],
+        id = HoBomLogId(record[HOBOM_LOGS.ID]),
         serviceType = ServiceType.valueOf(record[HOBOM_LOGS.SERVICE_TYPE].toString()),
         level = HoBomLogLevel.valueOf(record[HOBOM_LOGS.LEVEL].toString()),
         traceId = record[HOBOM_LOGS.TRACE_ID],

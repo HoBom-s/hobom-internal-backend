@@ -2,10 +2,12 @@ package com.hobom.hobominternal.infra.repository.log
 
 import com.example.jooq.generated.tables.HobomLogs.HOBOM_LOGS
 import com.hobom.hobominternal.domain.log.HoBomLog
+import com.hobom.hobominternal.domain.log.HoBomLogId
 import com.hobom.hobominternal.domain.log.HoBomLogQueryRepository
 import com.hobom.hobominternal.domain.log.HoBomLogSearchCriteria
 import com.hobom.hobominternal.domain.log.HoBomLogSqlMapper
 import com.hobom.hobominternal.domain.log.toConditions
+import com.hobom.hobominternal.exception.HoBomLogNotFoundException
 import com.hobom.hobominternal.shared.page.QueryResult
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository
@@ -36,5 +38,13 @@ class HoBomLogQueryRepositoryImpl(
             items = records.map { it },
             total = total,
         )
+    }
+
+    override fun findById(id: HoBomLogId): HoBomLog {
+        val record = dsl.selectFrom(HOBOM_LOGS)
+            .where(HOBOM_LOGS.ID.eq(id.toRaw()))
+            .fetchOne() ?: throw HoBomLogNotFoundException(id.toRaw())
+
+        return HoBomLogSqlMapper.fromRecord(record)
     }
 }

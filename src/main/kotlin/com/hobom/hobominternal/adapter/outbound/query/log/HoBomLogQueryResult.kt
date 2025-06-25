@@ -1,13 +1,14 @@
 package com.hobom.hobominternal.adapter.outbound.query.log
 
 import com.hobom.hobominternal.domain.log.HoBomLog
+import com.hobom.hobominternal.domain.log.HoBomLogId
 import com.hobom.hobominternal.domain.log.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.HttpMethodType
 import com.hobom.hobominternal.domain.log.ServiceType
 import java.time.Instant
 
 data class HoBomLogQueryResult(
-    val id: Long,
+    val id: HoBomLogId,
     val serviceType: ServiceType,
     val level: HoBomLogLevel,
     val traceId: String,
