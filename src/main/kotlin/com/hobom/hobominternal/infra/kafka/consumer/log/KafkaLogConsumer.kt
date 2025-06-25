@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.hobom.hobominternal.application.command.log.SaveLogCommand
 import com.hobom.hobominternal.port.inbound.log.SaveBulkLogUseCase
+import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.scheduling.annotation.Scheduled
@@ -23,8 +24,8 @@ class KafkaLogConsumer(
     private val buffer: MutableList<SaveLogCommand> = Collections.synchronizedList(mutableListOf())
 
     @KafkaListener(
-        topics = ["hobom.logs"],
-        groupId = "log-consumer-group",
+        topics = [KafkaTopics.HoBomLogs.TOPIC],
+        groupId = KafkaTopics.HoBomLogs.GROUP,
         autoStartup = "true",
     )
     open fun handle(record: ConsumerRecord<String, String>) {
