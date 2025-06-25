@@ -44,7 +44,7 @@ data class HoBomLogSearchResponse(
 ) {
     companion object {
         fun from(query: HoBomLogQueryResult): HoBomLogSearchResponse = HoBomLogSearchResponse(
-            id = query.id,
+            id = query.id.toRaw(),
             serviceType = query.serviceType.toString(),
             level = query.level.toString(),
             traceId = query.traceId,
