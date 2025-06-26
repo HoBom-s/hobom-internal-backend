@@ -1,20 +1,32 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/bear?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul"
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bear
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: update
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: log-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: foxmon1524@gmail.com
+    password: ${HOBOM_MAIL}
     properties:
-      hibernate:
-        hibernate:
-          dialect: org.hibernate.dialect.MySQL5Dialect
-          format_sql: true
-  redis:
-    host: localhost
-    port: 6379
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
 springdoc:
   version: v1.0.0
   swagger-ui:

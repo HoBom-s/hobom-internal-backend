@@ -1,2 +1,23 @@
 # IDE
-.idea
+.idea/
+
+# Gradle build cache
+.gradle/
+build/
+
+# Keep gradle wrapper
+!gradle/
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
+
+# Kotlin
+*.class
+*.jar
+*.war
+
+# Include all build.gradle or build.gradle.kts files
+!**/build.gradle*
+
+.env
