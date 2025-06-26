@@ -3,7 +3,7 @@ package com.hobom.hobominternal.infra.kafka.consumer.message
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.hobom.hobominternal.adapter.inbound.kafka.message.SaveHoBomMessageHandler
+import com.hobom.hobominternal.adapter.inbound.kafka.message.DeliverHoBomMessageHandler
 import com.hobom.hobominternal.domain.message.MessageType
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.mockk
@@ -16,7 +16,7 @@ class KafkaMessageConsumerTest {
     private val objectMapper = ObjectMapper()
         .registerModule(JavaTimeModule())
         .registerModule(KotlinModule.Builder().build())
-    private val handler = mockk<SaveHoBomMessageHandler>(relaxed = true)
+    private val handler = mockk<DeliverHoBomMessageHandler>(relaxed = true)
     private val consumer = KafkaMessageConsumer(objectMapper, handler)
 
     @Test
