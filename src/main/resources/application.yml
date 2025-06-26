@@ -22,7 +22,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: foxmon1524@gmail.com
-    password: "yzhd ohzt jksq bcfe"
+    password: ${HOBOM_MAIL}
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
