@@ -34,15 +34,15 @@ jooq {
         create("main") {
             jooqConfiguration.apply {
                 jdbc.apply {
-                    driver = "com.mysql.cj.jdbc.Driver"
-                    url = "jdbc:mysql://localhost:3306/bear?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul"
+                    driver = "org.postgresql.Driver"
+                    url = "jdbc:postgresql://localhost:5432/bear"
                     user = ""
                     password = ""
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
                     database.apply {
-                        name = "org.jooq.meta.mysql.MySQLDatabase"
+                        name = "org.jooq.meta.postgres.PostgresDatabase"
                         inputSchema = "bear"
                     }
                     target.apply {
@@ -100,7 +100,8 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("mysql:mysql-connector-java:8.0.33")
+    implementation("org.postgresql:postgresql:42.7.3")
+    implementation("org.springframework.boot:spring-boot-starter-mail")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
 
@@ -111,7 +112,7 @@ dependencies {
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
     jooqGenerator("org.jooq:jooq-meta:$jooqVersion")
     jooqGenerator("org.jooq:jooq:$jooqVersion")
-    jooqGenerator("com.mysql:mysql-connector-j:8.2.0")
+    jooqGenerator("org.postgresql:postgresql:42.7.3")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -124,7 +125,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("io.kotest:kotest-assertions-core:5.8.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-    testImplementation("com.mysql:mysql-connector-j:8.2.0")
 }
 
 dependencyManagement {

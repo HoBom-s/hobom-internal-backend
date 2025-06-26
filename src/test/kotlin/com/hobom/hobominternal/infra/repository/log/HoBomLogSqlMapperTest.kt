@@ -6,7 +6,7 @@ import com.hobom.hobominternal.domain.log.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.HttpMethodType
 import com.hobom.hobominternal.domain.log.ServiceType
 import org.assertj.core.api.Assertions.assertThat
-import org.jooq.JSON
+import org.jooq.JSONB
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -52,7 +52,7 @@ class HoBomLogSqlMapperTest {
         record.statusCode = 200
         record.host = "localhost"
         record.userId = "user-1"
-        record.payload = JSON.valueOf("""{"key":"value"}""")
+        record.payload = JSONB.valueOf("""{"key":"value"}""")
         record.timestamp = now
         record.createdAt = now
         record.updatedAt = now

@@ -1,7 +1,7 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: "jdbc:mysql://localhost:3306/bear?autoReconnect=true&useUnicode=true&serverTimezone=Asia/Seoul"
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bear
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
@@ -17,6 +17,15 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: foxmon1524@gmail.com
+    password: "yzhd ohzt jksq bcfe"
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 springdoc:
   version: v1.0.0

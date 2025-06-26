@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 
 @Component
 class KafkaMessageConsumer(
-    // For JavaTimeModule
     private val objectMapper: ObjectMapper,
     private val handler: SaveHoBomMessageHandler,
 ) : HoBomKafkaConsumer<SaveHoBomMessageDeliveryHistoryCommand>(

@@ -9,13 +9,22 @@ import com.hobom.hobominternal.domain.log.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.HttpMethodType
 import com.hobom.hobominternal.domain.log.ServiceType
 import com.hobom.hobominternal.shared.json.JsonUtil
+import org.postgresql.util.PGobject
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import java.sql.Timestamp
 import java.time.ZoneId
 
 object HoBomLogSqlMapper {
     private val objectMapper = jacksonObjectMapper()
 
     fun map(logs: List<HoBomLog>): Array<MapSqlParameterSource> = logs.map {
+        val json = it.payload?.let { payloadMap ->
+            PGobject().apply {
+                type = "jsonb"
+                value = objectMapper.writeValueAsString(payloadMap)
+            }
+        }
+
         MapSqlParameterSource()
             .addValue("serviceType", it.serviceType.name)
             .addValue("level", it.level.name)
@@ -26,8 +35,8 @@ object HoBomLogSqlMapper {
             .addValue("statusCode", it.statusCode)
             .addValue("host", it.host)
             .addValue("userId", it.userId)
-            .addValue("payload", it.payload?.let { p -> objectMapper.writeValueAsString(p) })
-            .addValue("timestamp", it.timestamp)
+            .addValue("payload", json)
+            .addValue("timestamp", Timestamp.from(it.timestamp))
     }.toTypedArray()
 
     fun fromRecord(record: HobomLogsRecord): HoBomLog = HoBomLog(

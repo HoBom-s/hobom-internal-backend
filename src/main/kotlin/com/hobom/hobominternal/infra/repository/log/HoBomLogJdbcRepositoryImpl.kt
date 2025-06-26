@@ -14,7 +14,7 @@ class HoBomLogJdbcRepositoryImpl(
     }
 
     private fun createInsertSql(): String = """
-        INSERT INTO hobom_logs (
+        INSERT INTO bear.hobom_logs (
             service_type, level, trace_id, message, http_method,
             path, status_code, host, user_id, payload, timestamp, created_at, updated_at
         ) VALUES (
