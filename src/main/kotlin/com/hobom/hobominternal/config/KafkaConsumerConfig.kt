@@ -13,26 +13,34 @@ import org.springframework.kafka.listener.ContainerProperties.AckMode
 import org.springframework.scheduling.annotation.EnableScheduling
 
 @EnableKafka
-@EnableScheduling
 @Configuration
+@EnableScheduling
 class KafkaConsumerConfig(
     private val kafkaProperties: KafkaProperties,
 ) {
 
-    @Bean
-    fun consumerFactory(): ConsumerFactory<String, String> {
-        val props = kafkaProperties.buildConsumerProperties()
+    private fun createConsumerFactory(groupId: String): ConsumerFactory<String, String> {
+        val props = kafkaProperties.buildConsumerProperties().toMutableMap()
+        props[ConsumerConfig.GROUP_ID_CONFIG] = groupId
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
-        props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "latest"
+        props[ConsumerConfig.AUTO_OFFSET_RESET_CONFIG] = "earliest"
         props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = false
         return DefaultKafkaConsumerFactory(props)
     }
 
-    @Bean
-    fun kafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+    @Bean(name = ["logKafkaListenerContainerFactory"])
+    fun logKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = consumerFactory()
+        factory.consumerFactory = createConsumerFactory("log-consumer-group")
+        factory.containerProperties.ackMode = AckMode.BATCH
+        return factory
+    }
+
+    @Bean(name = ["messageKafkaListenerContainerFactory"])
+    fun messageKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = createConsumerFactory("message-consumer-group")
         factory.containerProperties.ackMode = AckMode.BATCH
         return factory
     }

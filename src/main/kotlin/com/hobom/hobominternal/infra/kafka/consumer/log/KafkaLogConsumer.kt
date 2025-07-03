@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class KafkaLogConsumer(
-    objectMapper: ObjectMapper,
-    handler: SaveHoBomLogBatchHandler,
+    private val objectMapper: ObjectMapper,
+    private val handler: SaveHoBomLogBatchHandler,
 ) : HoBomBufferedKafkaConsumer<SaveLogCommand>(
     objectMapper,
     handler,
@@ -22,8 +22,8 @@ class KafkaLogConsumer(
 ) {
     @KafkaListener(
         topics = [KafkaTopics.HoBomLogs.TOPIC],
-        groupId = KafkaTopics.HoBomLogs.GROUP,
-        autoStartup = "true",
+        containerFactory = "logKafkaListenerContainerFactory",
+        autoStartup = "true"
     )
     override fun consume(record: ConsumerRecord<String, String>) {
         super.consume(record)
