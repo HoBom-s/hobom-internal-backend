@@ -107,6 +107,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
+    implementation("io.github.openfeign:feign-jackson:13.2")
 
     // jOOQ Codegen runtime
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")

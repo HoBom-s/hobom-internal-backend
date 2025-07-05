@@ -21,7 +21,7 @@ class KafkaMessageConsumer(
     @KafkaListener(
         topics = [KafkaTopics.HoBomMessages.TOPIC],
         containerFactory = "messageKafkaListenerContainerFactory",
-        autoStartup = "true"
+        autoStartup = "true",
     )
     override fun consume(record: ConsumerRecord<String, String>) {
         super.consume(record)
