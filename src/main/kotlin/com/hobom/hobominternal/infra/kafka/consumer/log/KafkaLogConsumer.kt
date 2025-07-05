@@ -23,7 +23,7 @@ class KafkaLogConsumer(
     @KafkaListener(
         topics = [KafkaTopics.HoBomLogs.TOPIC],
         containerFactory = "logKafkaListenerContainerFactory",
-        autoStartup = "true"
+        autoStartup = "true",
     )
     override fun consume(record: ConsumerRecord<String, String>) {
         super.consume(record)

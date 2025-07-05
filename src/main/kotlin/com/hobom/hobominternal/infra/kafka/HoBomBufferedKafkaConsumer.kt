@@ -18,7 +18,7 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
         try {
             val messages: List<T> = objectMapper.readValue(
                 record.value(),
-                objectMapper.typeFactory.constructCollectionType(List::class.java, clazz)
+                objectMapper.typeFactory.constructCollectionType(List::class.java, clazz),
             )
             buffer.addAll(messages)
             flushIfNeeded()
