@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "gradle"
-    directory: "/"  # 루트 디렉토리에 build.gradle이 있으므로 /
+    directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
