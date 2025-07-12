@@ -1,4 +1,3 @@
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -25,6 +24,15 @@ spotless {
         target("*.gradle.kts")
         ktlint()
     }
+}
+
+fun loadEnvProps(): Properties {
+    val props = Properties()
+    val envFile = rootProject.file(".env")
+    if (envFile.exists()) {
+        envFile.inputStream().use { props.load(it) }
+    }
+    return props
 }
 
 val jooqVersion = "3.20.5"
@@ -63,14 +71,11 @@ jooq {
 }
 
 flyway {
-    val envFile = rootProject.file(".env")
-    val props = Properties()
-    props.load(FileInputStream(rootProject.file(".env")))
-    props.load(envFile.inputStream())
+    val props = loadEnvProps()
 
     url = "jdbc:postgresql://localhost:5432/bear"
-    user = props.getProperty("DB_USER") ?: error("DB_USER not set")
-    password = props.getProperty("DB_PASSWORD") ?: error("DB_PASSWORD not set")
+    user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
+    password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
     locations = arrayOf("filesystem:src/main/resources/db/migration")
     schemas = arrayOf("bear")
     baselineOnMigrate = true
@@ -79,18 +84,12 @@ flyway {
 
 tasks.named("generateJooq") {
     doFirst {
-        val envFile = rootProject.file(".env")
-        if (envFile.exists()) {
-            val props = Properties()
-            props.load(FileInputStream(rootProject.file(".env")))
-            props.load(envFile.inputStream())
-            val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
-                .configurations.getByName("main").jooqConfiguration
-            jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: error("Missing DB_USER in .env")
-            jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: error("Missing DB_PASSWORD in .env")
-        } else {
-            error(".env file not found. Required for generateJooq.")
-        }
+        val props = loadEnvProps()
+        val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
+            .configurations.getByName("main").jooqConfiguration
+
+        jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: error("DB_USER not set")
+        jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: error("DB_PASSWORD not set")
     }
 }
 
