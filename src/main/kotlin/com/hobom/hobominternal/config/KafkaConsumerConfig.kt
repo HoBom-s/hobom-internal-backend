@@ -9,8 +9,11 @@ import org.springframework.kafka.annotation.EnableKafka
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory
 import org.springframework.kafka.core.ConsumerFactory
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.listener.ConsumerRecordRecoverer
 import org.springframework.kafka.listener.ContainerProperties.AckMode
+import org.springframework.kafka.listener.DefaultErrorHandler
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.util.backoff.FixedBackOff
 
 @EnableKafka
 @Configuration
@@ -18,6 +21,23 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class KafkaConsumerConfig(
     private val kafkaProperties: KafkaProperties,
 ) {
+    @Bean(name = ["logKafkaListenerContainerFactory"])
+    fun logKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = createConsumerFactory("log-consumer-group")
+        factory.containerProperties.ackMode = AckMode.BATCH
+        factory.setCommonErrorHandler(createErrorHandler())
+        return factory
+    }
+
+    @Bean(name = ["messageKafkaListenerContainerFactory"])
+    fun messageKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = createConsumerFactory("message-consumer-group")
+        factory.containerProperties.ackMode = AckMode.BATCH
+        factory.setCommonErrorHandler(createErrorHandler())
+        return factory
+    }
 
     private fun createConsumerFactory(groupId: String): ConsumerFactory<String, String> {
         val props = kafkaProperties.buildConsumerProperties().toMutableMap()
@@ -29,19 +49,14 @@ class KafkaConsumerConfig(
         return DefaultKafkaConsumerFactory(props)
     }
 
-    @Bean(name = ["logKafkaListenerContainerFactory"])
-    fun logKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = createConsumerFactory("log-consumer-group")
-        factory.containerProperties.ackMode = AckMode.BATCH
-        return factory
-    }
+    private fun createErrorHandler(): DefaultErrorHandler {
+        val recover = ConsumerRecordRecoverer { record, exception ->
+            println("DLQ 발생: ${record.topic()}-${record.partition()}-${record.offset()} | ${exception.message}")
+            // TODO: DLQ 저장 or Discord 알림
+        }
 
-    @Bean(name = ["messageKafkaListenerContainerFactory"])
-    fun messageKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
-        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
-        factory.consumerFactory = createConsumerFactory("message-consumer-group")
-        factory.containerProperties.ackMode = AckMode.BATCH
-        return factory
+        return DefaultErrorHandler(recover, FixedBackOff(1000L, 2)).apply {
+            isAckAfterHandle = true
+        }
     }
 }

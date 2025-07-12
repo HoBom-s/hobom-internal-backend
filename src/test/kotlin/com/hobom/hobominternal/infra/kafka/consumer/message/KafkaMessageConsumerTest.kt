@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.hobom.hobominternal.adapter.inbound.kafka.message.DeliverHoBomMessageHandler
 import com.hobom.hobominternal.domain.message.MessageType
+import com.hobom.hobominternal.port.outbound.dlq.DlqMessagePersistencePort
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,7 +18,8 @@ class KafkaMessageConsumerTest {
         .registerModule(JavaTimeModule())
         .registerModule(KotlinModule.Builder().build())
     private val handler = mockk<DeliverHoBomMessageHandler>(relaxed = true)
-    private val consumer = KafkaMessageConsumer(objectMapper, handler)
+    private val port = mockk<DlqMessagePersistencePort>(relaxed = true)
+    private val consumer = KafkaMessageConsumer(objectMapper, handler, port)
 
     @Test
     fun `handle should parse message and invoke use case`() {
