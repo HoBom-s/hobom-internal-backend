@@ -18,9 +18,7 @@ abstract class HoBomKafkaConsumer<T : Any>(
             handler.handle(message)
             acknowledgeProcessed(message, record)
         } catch (e: Exception) {
-            // Message process failed.
-            // Try to send `Dead Letter Queue`.
-            // DefaultErrorHandler or fallback DLQ.
+            onConsumeFailed(record.value(), e, record)
             throw e
         }
     }
@@ -28,4 +26,9 @@ abstract class HoBomKafkaConsumer<T : Any>(
     open fun isDuplicated(message: T, record: ConsumerRecord<String, String>): Boolean = false
 
     open fun acknowledgeProcessed(message: T, record: ConsumerRecord<String, String>) {}
+    open fun onConsumeFailed(
+        rawValue: String,
+        exception: Exception,
+        record: ConsumerRecord<String, String>,
+    ) {}
 }
