@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:file:.env
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/bear
@@ -8,6 +10,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
+    baseline-version: 3
     locations: classpath:db/migration
 
   kafka:

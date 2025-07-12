@@ -1,4 +1,3 @@
-import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
@@ -9,6 +8,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "6.21.0"
     id("nu.studer.jooq") version "9.0"
+    id("org.flywaydb.flyway") version "9.22.3"
 }
 
 spotless {
@@ -24,6 +24,15 @@ spotless {
         target("*.gradle.kts")
         ktlint()
     }
+}
+
+fun loadEnvProps(): Properties {
+    val props = Properties()
+    val envFile = rootProject.file(".env")
+    if (envFile.exists()) {
+        envFile.inputStream().use { props.load(it) }
+    }
+    return props
 }
 
 val jooqVersion = "3.20.5"
@@ -61,20 +70,26 @@ jooq {
     }
 }
 
+flyway {
+    val props = loadEnvProps()
+
+    url = "jdbc:postgresql://localhost:5432/bear"
+    user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
+    password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
+    locations = arrayOf("filesystem:src/main/resources/db/migration")
+    schemas = arrayOf("bear")
+    baselineOnMigrate = true
+    baselineVersion = "3"
+}
+
 tasks.named("generateJooq") {
     doFirst {
-        val envFile = rootProject.file(".env")
-        if (envFile.exists()) {
-            val props = Properties()
-            props.load(FileInputStream(rootProject.file(".env")))
-            props.load(envFile.inputStream())
-            val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
-                .configurations.getByName("main").jooqConfiguration
-            jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: error("Missing DB_USER in .env")
-            jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: error("Missing DB_PASSWORD in .env")
-        } else {
-            error(".env file not found. Required for generateJooq.")
-        }
+        val props = loadEnvProps()
+        val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
+            .configurations.getByName("main").jooqConfiguration
+
+        jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: error("DB_USER not set")
+        jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: error("DB_PASSWORD not set")
     }
 }
 
@@ -108,6 +123,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
     implementation("io.github.openfeign:feign-jackson:13.2")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     // jOOQ Codegen runtime
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
