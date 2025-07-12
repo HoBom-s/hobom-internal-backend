@@ -9,6 +9,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "6.21.0"
     id("nu.studer.jooq") version "9.0"
+    id("org.flywaydb.flyway") version "9.22.3"
 }
 
 spotless {
@@ -61,6 +62,21 @@ jooq {
     }
 }
 
+flyway {
+    val envFile = rootProject.file(".env")
+    val props = Properties()
+    props.load(FileInputStream(rootProject.file(".env")))
+    props.load(envFile.inputStream())
+
+    url = "jdbc:postgresql://localhost:5432/bear"
+    user = props.getProperty("DB_USER") ?: error("DB_USER not set")
+    password = props.getProperty("DB_PASSWORD") ?: error("DB_PASSWORD not set")
+    locations = arrayOf("filesystem:src/main/resources/db/migration")
+    schemas = arrayOf("bear")
+    baselineOnMigrate = true
+    baselineVersion = "3"
+}
+
 tasks.named("generateJooq") {
     doFirst {
         val envFile = rootProject.file(".env")
@@ -108,6 +124,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
     implementation("io.github.openfeign:feign-jackson:13.2")
+    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
 
     // jOOQ Codegen runtime
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
