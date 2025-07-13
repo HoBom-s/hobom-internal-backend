@@ -10,9 +10,10 @@ class SendHoBomMessageService(
     private val strategies: List<MessageSenderStrategy>,
 ) : SendHoBomMessageUseCase {
     override fun invoke(command: DeliverHoBomMessageCommand) {
-        strategies
+        val strategy = strategies
             .firstOrNull { it.supports(command.type) }
-            ?.send(command)
             ?: throw UnsupportedOperationException("Unsupported message type: ${command.type}")
+
+        strategy.send(command)
     }
 }

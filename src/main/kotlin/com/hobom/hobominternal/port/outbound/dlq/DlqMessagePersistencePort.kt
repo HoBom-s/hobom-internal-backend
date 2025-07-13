@@ -8,4 +8,6 @@ interface DlqMessagePersistencePort {
     fun load(id: DlqMessageId): DlqMessage
 
     fun save(request: DlqMessageCreateRequest)
+
+    fun upsert(id: DlqMessageId, request: DlqMessageCreateRequest)
 }

@@ -18,4 +18,8 @@ class DlqMessagePersistenceAdapter(
     override fun save(request: DlqMessageCreateRequest) {
         dlqMessagePersistenceRepository.save(request)
     }
+
+    override fun upsert(id: DlqMessageId, request: DlqMessageCreateRequest) {
+        dlqMessagePersistenceRepository.upsert(id, request)
+    }
 }
