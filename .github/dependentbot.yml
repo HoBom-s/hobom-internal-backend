@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "direct"
+
+    ignore:
+      # Spotless ( 수동 관리 )
+      - dependency-name: "com.diffplug.spotless"
+      - dependency-name: "com.pinterest:ktlint"
+
+      # Gradle Plugin ( 수동 관리 )
+      - dependency-name: "org.springframework.boot"
+      - dependency-name: "io.spring.dependency-management"
+      - dependency-name: "nu.studer:jooq"

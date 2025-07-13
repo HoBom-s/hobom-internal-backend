@@ -9,15 +9,18 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
     private val objectMapper: ObjectMapper,
     private val handler: KafkaBatchMessageHandler<T>,
     private val clazz: Class<T>,
-    private val batchSize: Int = 100,
+    private val batchSize: Int = 3,
     private val flushDelayMillis: Long = 5000L,
 ) {
     private val buffer: MutableList<T> = Collections.synchronizedList(mutableListOf())
 
     open fun consume(record: ConsumerRecord<String, String>) {
         try {
-            val message = objectMapper.readValue(record.value(), clazz)
-            buffer += message
+            val messages: List<T> = objectMapper.readValue(
+                record.value(),
+                objectMapper.typeFactory.constructCollectionType(List::class.java, clazz),
+            )
+            buffer.addAll(messages)
             flushIfNeeded()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -35,6 +38,7 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
         if (buffer.isEmpty()) {
             return
         }
+        println("Buffer : ${buffer.toList()}")
 
         handler.handle(buffer.toList())
         buffer.clear()

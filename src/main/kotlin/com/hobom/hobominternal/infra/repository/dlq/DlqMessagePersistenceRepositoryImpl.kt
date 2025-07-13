@@ -1,0 +1,33 @@
+package com.hobom.hobominternal.infra.repository.dlq
+
+import com.example.jooq.generated.tables.MessageDlqs.MESSAGE_DLQS
+import com.hobom.hobominternal.domain.dlq.DlqMessage
+import com.hobom.hobominternal.domain.dlq.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.DlqMessageId
+import com.hobom.hobominternal.domain.dlq.DlqMessagePersistenceRepository
+import com.hobom.hobominternal.exception.DlqMessageNotFoundException
+import org.jooq.DSLContext
+import org.springframework.stereotype.Repository
+
+@Repository
+class DlqMessagePersistenceRepositoryImpl(
+    private val dsl: DSLContext,
+) : DlqMessagePersistenceRepository {
+    override fun load(id: DlqMessageId): DlqMessage {
+        val foundDlqMessage = dsl.selectFrom(MESSAGE_DLQS)
+            .where(MESSAGE_DLQS.ID.eq(id.toRaw()))
+            .fetchOne() ?: throw DlqMessageNotFoundException(id.toRaw())
+
+        return foundDlqMessage.toDomain()
+    }
+
+    override fun save(request: DlqMessageCreateRequest) {
+        DlqMessageSqlMapper
+            .toInsertMap(dsl.insertInto(MESSAGE_DLQS), request)
+            .execute()
+    }
+
+    override fun upsert(id: DlqMessageId, request: DlqMessageCreateRequest) {
+        DlqMessageSqlMapper.upsert(dsl, id.toRaw(), request)
+    }
+}
