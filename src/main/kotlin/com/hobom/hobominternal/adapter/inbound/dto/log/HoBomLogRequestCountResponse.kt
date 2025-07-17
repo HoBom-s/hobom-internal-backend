@@ -1,0 +1,13 @@
+package com.hobom.hobominternal.adapter.inbound.dto.log
+
+import io.swagger.v3.oas.annotations.media.Schema
+import java.time.OffsetDateTime
+
+@Schema(description = "HoBom Log Status Count Response")
+data class HoBomLogRequestCountResponse(
+    @Schema(description = "yyyy-MM-dd HH:mm:ss")
+    val minute: String,
+
+    @Schema(description = "Total request count")
+    val totalRequests: Long,
+)
