@@ -137,8 +137,8 @@ dependencies {
         exclude(module = "mockito-core")
     }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
-    testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
+    testImplementation("com.tngtech.archunit:archunit-junit5:1.4.1")
+    testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.4.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:1.13.9")
     testImplementation("io.kotest:kotest-assertions-core:5.8.0")
