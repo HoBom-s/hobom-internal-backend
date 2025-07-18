@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.hobom.hobominternal.adapter.inbound.kafka.message.DeliverHoBomMessageHandler
-import com.hobom.hobominternal.domain.message.MessageType
-import com.hobom.hobominternal.port.outbound.dlq.DlqMessagePersistencePort
+import com.hobom.hobominternal.domain.dlq.port.outbound.DlqMessagePersistencePort
+import com.hobom.hobominternal.domain.message.model.MessageType
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.mockk
 import io.mockk.verify

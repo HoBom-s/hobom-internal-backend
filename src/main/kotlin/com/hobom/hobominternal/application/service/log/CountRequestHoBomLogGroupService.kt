@@ -1,8 +1,8 @@
 package com.hobom.hobominternal.application.service.log
 
-import com.hobom.hobominternal.domain.log.RequestCount
-import com.hobom.hobominternal.port.inbound.log.CountRequestHoBomLogGroupUseCase
-import com.hobom.hobominternal.port.outbound.log.CountRequestHoBomLogGroupQueryPort
+import com.hobom.hobominternal.domain.log.model.RequestCount
+import com.hobom.hobominternal.domain.log.port.inbound.CountRequestHoBomLogGroupUseCase
+import com.hobom.hobominternal.domain.log.port.outbound.CountRequestHoBomLogGroupQueryPort
 import org.springframework.stereotype.Service
 
 @Service

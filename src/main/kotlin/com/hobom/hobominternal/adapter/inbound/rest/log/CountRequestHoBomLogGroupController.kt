@@ -1,8 +1,7 @@
 package com.hobom.hobominternal.adapter.inbound.rest.log
 
-import com.hobom.hobominternal.adapter.inbound.dto.log.HoBomLogRequestCountResponse
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
-import com.hobom.hobominternal.port.inbound.log.CountRequestHoBomLogGroupUseCase
+import com.hobom.hobominternal.domain.log.port.inbound.CountRequestHoBomLogGroupUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity

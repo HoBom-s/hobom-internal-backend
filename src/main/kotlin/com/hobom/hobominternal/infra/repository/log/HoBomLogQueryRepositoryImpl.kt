@@ -1,13 +1,13 @@
 package com.hobom.hobominternal.infra.repository.log
 
 import com.example.jooq.generated.tables.HobomLogs.HOBOM_LOGS
-import com.hobom.hobominternal.domain.log.HoBomLog
-import com.hobom.hobominternal.domain.log.HoBomLogId
-import com.hobom.hobominternal.domain.log.HoBomLogQueryRepository
-import com.hobom.hobominternal.domain.log.HoBomLogSearchCriteria
-import com.hobom.hobominternal.domain.log.LogStatusCount
-import com.hobom.hobominternal.domain.log.RequestCount
-import com.hobom.hobominternal.domain.log.toConditions
+import com.hobom.hobominternal.domain.log.model.HoBomLog
+import com.hobom.hobominternal.domain.log.model.HoBomLogId
+import com.hobom.hobominternal.domain.log.model.HoBomLogQueryRepository
+import com.hobom.hobominternal.domain.log.model.HoBomLogSearchCriteria
+import com.hobom.hobominternal.domain.log.model.LogStatusCount
+import com.hobom.hobominternal.domain.log.model.RequestCount
+import com.hobom.hobominternal.domain.log.model.toConditions
 import com.hobom.hobominternal.exception.HoBomLogNotFoundException
 import com.hobom.hobominternal.shared.page.QueryResult
 import org.jooq.DSLContext

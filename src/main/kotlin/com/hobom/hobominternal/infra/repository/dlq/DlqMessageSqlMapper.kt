@@ -3,10 +3,10 @@ package com.hobom.hobominternal.infra.repository.dlq
 import com.example.jooq.generated.Tables.MESSAGE_DLQS
 import com.example.jooq.generated.tables.MessageDlqs
 import com.example.jooq.generated.tables.records.MessageDlqsRecord
-import com.hobom.hobominternal.domain.dlq.DlqMessage
-import com.hobom.hobominternal.domain.dlq.DlqMessageCreateRequest
-import com.hobom.hobominternal.domain.dlq.DlqMessageId
-import com.hobom.hobominternal.domain.dlq.DlqStatus
+import com.hobom.hobominternal.domain.dlq.model.DlqMessage
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
+import com.hobom.hobominternal.domain.dlq.model.DlqStatus
 import org.jooq.DSLContext
 import org.jooq.InsertSetStep
 import org.jooq.JSONB

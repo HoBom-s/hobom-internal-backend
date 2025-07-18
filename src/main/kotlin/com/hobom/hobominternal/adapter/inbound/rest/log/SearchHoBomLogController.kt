@@ -1,10 +1,7 @@
 package com.hobom.hobominternal.adapter.inbound.rest.log
 
-import com.hobom.hobominternal.adapter.inbound.dto.log.HoBomLogSearchRequest
-import com.hobom.hobominternal.adapter.inbound.dto.log.HoBomLogSearchResponse
-import com.hobom.hobominternal.adapter.inbound.dto.log.toCriteria
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
-import com.hobom.hobominternal.port.inbound.log.SearchHoBomLogUseCase
+import com.hobom.hobominternal.domain.log.port.inbound.SearchHoBomLogUseCase
 import com.hobom.hobominternal.shared.page.PageRequest
 import com.hobom.hobominternal.shared.page.PageResponse
 import io.swagger.v3.oas.annotations.Operation

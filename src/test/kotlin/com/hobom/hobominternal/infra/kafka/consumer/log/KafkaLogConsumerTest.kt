@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.hobom.hobominternal.adapter.inbound.kafka.log.SaveHoBomLogBatchHandler
 import com.hobom.hobominternal.application.command.log.SaveLogCommand
-import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HttpMethodType
-import com.hobom.hobominternal.domain.log.ServiceType
+import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
+import com.hobom.hobominternal.domain.log.model.HttpMethodType
+import com.hobom.hobominternal.domain.log.model.ServiceType
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,8 +1,8 @@
 package com.hobom.hobominternal.application.command.message
 
-import com.hobom.hobominternal.domain.mail.MailRequest
-import com.hobom.hobominternal.domain.message.HoBomMessageDeliveryHistoryCreateRequest
-import com.hobom.hobominternal.domain.message.MessageType
+import com.hobom.hobominternal.domain.mail.model.MailRequest
+import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryCreateRequest
+import com.hobom.hobominternal.domain.message.model.MessageType
 import java.time.Instant
 
 data class DeliverHoBomMessageCommand(

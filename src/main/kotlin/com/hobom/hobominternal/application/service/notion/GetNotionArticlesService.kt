@@ -1,9 +1,9 @@
 package com.hobom.hobominternal.application.service.notion
 
+import com.hobom.hobominternal.domain.notion.port.inbound.GetNotionArticlesUseCase
+import com.hobom.hobominternal.domain.notion.port.outbound.NotionQueryPort
 import com.hobom.hobominternal.infra.feign.notion.dto.DatabaseQueryResponse
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionQueryRequest
-import com.hobom.hobominternal.port.inbound.notion.GetNotionArticlesUseCase
-import com.hobom.hobominternal.port.outbound.notion.NotionQueryPort
 import org.springframework.stereotype.Service
 
 @Service

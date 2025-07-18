@@ -2,7 +2,7 @@ package com.hobom.hobominternal.infra.repository.message
 
 import com.example.jooq.generated.Tables.MESSAGE_DELIVERY_HISTORIES
 import com.example.jooq.generated.tables.records.MessageDeliveryHistoriesRecord
-import com.hobom.hobominternal.domain.message.HoBomMessageDeliveryHistoryCreateRequest
+import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryCreateRequest
 import org.jooq.InsertSetStep
 import org.jooq.Query
 import java.time.Instant

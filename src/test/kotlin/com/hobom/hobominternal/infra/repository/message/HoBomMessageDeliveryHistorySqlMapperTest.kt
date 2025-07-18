@@ -1,8 +1,8 @@
 package com.hobom.hobominternal.infra.repository.message
 
 import com.example.jooq.generated.Tables.MESSAGE_DELIVERY_HISTORIES
-import com.hobom.hobominternal.domain.message.HoBomMessageDeliveryHistoryCreateRequest
-import com.hobom.hobominternal.domain.message.MessageType
+import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryCreateRequest
+import com.hobom.hobominternal.domain.message.model.MessageType
 import org.assertj.core.api.Assertions.assertThat
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL

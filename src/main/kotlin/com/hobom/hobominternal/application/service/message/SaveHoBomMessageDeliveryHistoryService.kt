@@ -2,8 +2,8 @@ package com.hobom.hobominternal.application.service.message
 
 import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCommand
 import com.hobom.hobominternal.application.command.message.toRequest
-import com.hobom.hobominternal.port.inbound.message.SaveHoBomMessageDeliveryHistoryUseCase
-import com.hobom.hobominternal.port.outbound.message.HoBomMessageDeliveryHistoryPersistencePort
+import com.hobom.hobominternal.domain.message.port.inbound.SaveHoBomMessageDeliveryHistoryUseCase
+import com.hobom.hobominternal.domain.message.port.outbound.HoBomMessageDeliveryHistoryPersistencePort
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

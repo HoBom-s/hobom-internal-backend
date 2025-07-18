@@ -2,9 +2,9 @@ package com.hobom.hobominternal.infra.kafka.producer.log
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.hobom.hobominternal.application.command.log.SaveLogCommand
-import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HttpMethodType
-import com.hobom.hobominternal.domain.log.ServiceType
+import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
+import com.hobom.hobominternal.domain.log.model.HttpMethodType
+import com.hobom.hobominternal.domain.log.model.ServiceType
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

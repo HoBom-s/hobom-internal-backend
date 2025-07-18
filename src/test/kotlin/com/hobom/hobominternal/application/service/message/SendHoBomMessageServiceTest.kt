@@ -1,8 +1,7 @@
 package com.hobom.hobominternal.application.service.message
 
 import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCommand
-import com.hobom.hobominternal.application.service.message.strategy.MessageSenderStrategy
-import com.hobom.hobominternal.domain.message.MessageType
+import com.hobom.hobominternal.domain.message.model.MessageType
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

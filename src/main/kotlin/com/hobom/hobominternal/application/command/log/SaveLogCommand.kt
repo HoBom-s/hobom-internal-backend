@@ -1,9 +1,9 @@
 package com.hobom.hobominternal.application.command.log
 
-import com.hobom.hobominternal.domain.log.HoBomLog
-import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HttpMethodType
-import com.hobom.hobominternal.domain.log.ServiceType
+import com.hobom.hobominternal.domain.log.model.HoBomLog
+import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
+import com.hobom.hobominternal.domain.log.model.HttpMethodType
+import com.hobom.hobominternal.domain.log.model.ServiceType
 import java.time.Instant
 
 data class SaveLogCommand(

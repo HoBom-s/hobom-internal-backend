@@ -1,9 +1,9 @@
 package com.hobom.hobominternal.application.service.log
 
-import com.hobom.hobominternal.adapter.outbound.query.log.HoBomLogQueryResult
-import com.hobom.hobominternal.domain.log.HoBomLogId
-import com.hobom.hobominternal.port.inbound.log.FindHoBomLogByIdUseCase
-import com.hobom.hobominternal.port.outbound.log.FindHoBomLogByIdQueryPort
+import com.hobom.hobominternal.adapter.outbound.log.HoBomLogQueryResult
+import com.hobom.hobominternal.domain.log.model.HoBomLogId
+import com.hobom.hobominternal.domain.log.port.inbound.FindHoBomLogByIdUseCase
+import com.hobom.hobominternal.domain.log.port.outbound.FindHoBomLogByIdQueryPort
 import org.springframework.stereotype.Service
 
 @Service

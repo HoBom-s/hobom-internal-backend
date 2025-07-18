@@ -1,8 +1,7 @@
 package com.hobom.hobominternal.adapter.inbound.rest.notion
 
-import com.hobom.hobominternal.adapter.inbound.dto.notion.BlockChildrenResponse
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
-import com.hobom.hobominternal.port.inbound.notion.GetNotionBlockUseCase
+import com.hobom.hobominternal.domain.notion.port.inbound.GetNotionBlockUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity

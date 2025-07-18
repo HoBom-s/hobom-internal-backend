@@ -1,9 +1,8 @@
 package com.hobom.hobominternal.adapter.inbound.rest.log
 
-import com.hobom.hobominternal.adapter.inbound.dto.log.HoBomLogSearchResponse
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
-import com.hobom.hobominternal.domain.log.HoBomLogId
-import com.hobom.hobominternal.port.inbound.log.FindHoBomLogByIdUseCase
+import com.hobom.hobominternal.domain.log.model.HoBomLogId
+import com.hobom.hobominternal.domain.log.port.inbound.FindHoBomLogByIdUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
