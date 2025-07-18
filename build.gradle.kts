@@ -118,7 +118,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("org.springframework.boot:spring-boot-starter-mail")
 
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
