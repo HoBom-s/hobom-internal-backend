@@ -2,13 +2,13 @@ package com.hobom.hobominternal.application.service.dlq
 
 import com.hobom.hobominternal.application.command.dlq.ManualSendMessageDlqCommand
 import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCommand
-import com.hobom.hobominternal.application.service.message.strategy.MessageSenderStrategy
-import com.hobom.hobominternal.domain.dlq.DlqMessage
-import com.hobom.hobominternal.domain.dlq.DlqMessageCreateRequest
-import com.hobom.hobominternal.domain.dlq.DlqMessageId
-import com.hobom.hobominternal.domain.message.MessageType
-import com.hobom.hobominternal.port.inbound.dlq.ManualSendMessageDlqUseCase
-import com.hobom.hobominternal.port.outbound.dlq.DlqMessagePersistencePort
+import com.hobom.hobominternal.application.service.message.MessageSenderStrategy
+import com.hobom.hobominternal.domain.dlq.model.DlqMessage
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
+import com.hobom.hobominternal.domain.dlq.port.inbound.ManualSendMessageDlqUseCase
+import com.hobom.hobominternal.domain.dlq.port.outbound.DlqMessagePersistencePort
+import com.hobom.hobominternal.domain.message.model.MessageType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

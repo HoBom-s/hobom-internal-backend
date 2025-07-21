@@ -9,6 +9,7 @@ on:
 jobs:
   jira-ticket-check:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
 
     steps:
       - name: Validate JIRA ticket in PR title

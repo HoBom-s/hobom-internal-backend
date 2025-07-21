@@ -3,9 +3,9 @@ package com.hobom.hobominternal.infra.kafka.consumer.message
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.hobom.hobominternal.adapter.inbound.kafka.message.DeliverHoBomMessageHandler
 import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCommand
-import com.hobom.hobominternal.domain.dlq.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.port.outbound.DlqMessagePersistencePort
 import com.hobom.hobominternal.infra.kafka.HoBomKafkaConsumer
-import com.hobom.hobominternal.port.outbound.dlq.DlqMessagePersistencePort
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener

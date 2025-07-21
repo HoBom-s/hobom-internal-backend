@@ -1,8 +1,7 @@
 package com.hobom.hobominternal.adapter.inbound.rest.dlq
 
-import com.hobom.hobominternal.adapter.inbound.dto.dlq.DlqMessageResponse
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
-import com.hobom.hobominternal.port.inbound.dlq.FindAllDlqMessageUseCase
+import com.hobom.hobominternal.domain.dlq.port.inbound.FindAllDlqMessageUseCase
 import com.hobom.hobominternal.shared.page.PageResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag

@@ -1,8 +1,8 @@
 package com.hobom.hobominternal.application.service.notion
 
+import com.hobom.hobominternal.domain.notion.port.inbound.GetNotionBlockUseCase
+import com.hobom.hobominternal.domain.notion.port.outbound.NotionQueryPort
 import com.hobom.hobominternal.infra.feign.notion.util.NotionMarkdownFormatter
-import com.hobom.hobominternal.port.inbound.notion.GetNotionBlockUseCase
-import com.hobom.hobominternal.port.outbound.notion.NotionQueryPort
 import org.springframework.stereotype.Service
 
 @Service

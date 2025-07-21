@@ -1,10 +1,10 @@
 package com.hobom.hobominternal.infra.repository.dlq
 
 import com.example.jooq.generated.tables.MessageDlqs.MESSAGE_DLQS
-import com.hobom.hobominternal.domain.dlq.DlqMessage
-import com.hobom.hobominternal.domain.dlq.DlqMessageCreateRequest
-import com.hobom.hobominternal.domain.dlq.DlqMessageId
-import com.hobom.hobominternal.domain.dlq.DlqMessagePersistenceRepository
+import com.hobom.hobominternal.domain.dlq.model.DlqMessage
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
+import com.hobom.hobominternal.domain.dlq.model.DlqMessagePersistenceRepository
 import com.hobom.hobominternal.exception.DlqMessageNotFoundException
 import org.jooq.DSLContext
 import org.springframework.stereotype.Repository

@@ -1,7 +1,7 @@
 package com.hobom.hobominternal.application.command.dlq
 
-import com.hobom.hobominternal.domain.dlq.DlqMessageId
-import com.hobom.hobominternal.domain.message.MessageType
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
+import com.hobom.hobominternal.domain.message.model.MessageType
 import java.time.Instant
 
 data class ManualSendMessageDlqCommand(

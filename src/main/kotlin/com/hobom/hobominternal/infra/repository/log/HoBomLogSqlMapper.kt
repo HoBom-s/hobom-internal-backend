@@ -3,11 +3,11 @@ package com.hobom.hobominternal.infra.repository.log
 import com.example.jooq.generated.tables.HobomLogs.HOBOM_LOGS
 import com.example.jooq.generated.tables.records.HobomLogsRecord
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.hobom.hobominternal.domain.log.HoBomLog
-import com.hobom.hobominternal.domain.log.HoBomLogId
-import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HttpMethodType
-import com.hobom.hobominternal.domain.log.ServiceType
+import com.hobom.hobominternal.domain.log.model.HoBomLog
+import com.hobom.hobominternal.domain.log.model.HoBomLogId
+import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
+import com.hobom.hobominternal.domain.log.model.HttpMethodType
+import com.hobom.hobominternal.domain.log.model.ServiceType
 import com.hobom.hobominternal.shared.json.JsonUtil
 import org.postgresql.util.PGobject
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource

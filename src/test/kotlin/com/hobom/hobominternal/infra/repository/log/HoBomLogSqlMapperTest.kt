@@ -1,10 +1,10 @@
 package com.hobom.hobominternal.infra.repository.log
 
 import com.example.jooq.generated.tables.records.HobomLogsRecord
-import com.hobom.hobominternal.domain.log.HoBomLog
-import com.hobom.hobominternal.domain.log.HoBomLogLevel
-import com.hobom.hobominternal.domain.log.HttpMethodType
-import com.hobom.hobominternal.domain.log.ServiceType
+import com.hobom.hobominternal.domain.log.model.HoBomLog
+import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
+import com.hobom.hobominternal.domain.log.model.HttpMethodType
+import com.hobom.hobominternal.domain.log.model.ServiceType
 import org.assertj.core.api.Assertions.assertThat
 import org.jooq.JSONB
 import org.junit.jupiter.api.Assertions.assertEquals
