@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm") version "1.9.25"
@@ -80,6 +81,10 @@ flyway {
     schemas = arrayOf("bear")
     baselineOnMigrate = true
     baselineVersion = "3"
+}
+
+tasks.named<BootJar>("bootJar") {
+    archiveFileName.set("hobom-internal-backend.jar")
 }
 
 tasks.named("generateJooq") {
