@@ -1,6 +1,5 @@
 package com.hobom.hobominternal.infra.repository.log
 
-import com.example.jooq.generated.tables.HobomLogs.HOBOM_LOGS
 import com.hobom.hobominternal.domain.log.model.HoBomLog
 import com.hobom.hobominternal.domain.log.model.HoBomLogId
 import com.hobom.hobominternal.domain.log.model.HoBomLogQueryRepository
@@ -11,6 +10,7 @@ import com.hobom.hobominternal.domain.log.model.toConditions
 import com.hobom.hobominternal.exception.HoBomLogNotFoundException
 import com.hobom.hobominternal.shared.page.QueryResult
 import org.jooq.DSLContext
+import org.jooq.generated.Tables.HOBOM_LOGS
 import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
