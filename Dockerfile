@@ -1,22 +1,27 @@
-# 1. Project build
-FROM eclipse-temurin:21-jdk AS build
-WORKDIR /app
+FROM eclipse-temurin:21-jdk-alpine AS build
+WORKDIR /workspace
 
-COPY gradlew ./
+COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle gradle
-COPY build.gradle settings.gradle ./
-RUN ./gradlew --no-daemon -q clean build -x test || true
+RUN chmod +x gradlew
 
-COPY src src
-RUN ./gradlew --no-daemon -q build -x test
+COPY . .
+RUN ./gradlew --no-daemon clean bootJar -x test \
+ && ls build/libs \
+ && cp build/libs/*.jar /workspace/app.jar
 
-# 2. Runtime
-FROM eclipse-temurin:21-jre-alpine AS runtime
+FROM eclipse-temurin:21-jre-alpine
+
+RUN addgroup -S app && adduser -S app -G app
+USER app:app
 WORKDIR /app
 
-ENV JAVA_TOOL_OPTIONS="-XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+COPY --from=build /workspace/app.jar ./app.jar
 
-COPY --from=build /app/build/libs/hobom-internal-backend.jar /app/app.jar
+ENV SERVER_PORT=8081 \
+    SPRING_PROFILES_ACTIVE=prod \
+    JAVA_OPTS=""
 
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+EXPOSE 8081
+
+ENTRYPOINT ["sh","-c","exec java $JAVA_OPTS -jar app.jar"]
