@@ -1,3 +1,6 @@
+server:
+  port: 8081
+
 spring:
   config:
     import: optional:file:.env
@@ -10,7 +13,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-    baseline-version: 3
+    baseline-version: 5
     locations: classpath:db/migration
 
   kafka:
