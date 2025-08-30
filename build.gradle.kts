@@ -45,7 +45,7 @@ jooq {
             jooqConfiguration.apply {
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://localhost:5432/bear"
+                    url = "jdbc:postgresql://ishisha.iptime.org:5432/bear"
                     user = ""
                     password = ""
                 }
