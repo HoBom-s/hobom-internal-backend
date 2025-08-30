@@ -1,5 +1,5 @@
-import java.util.Properties
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import java.util.Properties
 
 plugins {
     kotlin("jvm") version "1.9.25"
