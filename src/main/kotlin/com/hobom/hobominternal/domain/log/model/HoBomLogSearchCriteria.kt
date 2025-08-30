@@ -1,7 +1,7 @@
 package com.hobom.hobominternal.domain.log.model
 
 import org.jooq.Condition
-import org.jooq.generated.Tables.HOBOM_LOGS
+import org.jooq.generated.tables.references.HOBOM_LOGS
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId

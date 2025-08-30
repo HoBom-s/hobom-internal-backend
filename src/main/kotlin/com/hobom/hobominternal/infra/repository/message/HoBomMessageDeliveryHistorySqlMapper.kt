@@ -3,8 +3,8 @@ package com.hobom.hobominternal.infra.repository.message
 import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryCreateRequest
 import org.jooq.InsertSetStep
 import org.jooq.Query
-import org.jooq.generated.Tables.MESSAGE_DELIVERY_HISTORIES
 import org.jooq.generated.tables.records.MessageDeliveryHistoriesRecord
+import org.jooq.generated.tables.references.MESSAGE_DELIVERY_HISTORIES
 import java.time.Instant
 import java.time.ZoneOffset
 

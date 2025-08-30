@@ -10,8 +10,8 @@ import org.jooq.JSON
 import org.jooq.Query
 import org.jooq.Record
 import org.jooq.generated.tables.MessageDlqs
-import org.jooq.generated.tables.MessageDlqs.MESSAGE_DLQS
 import org.jooq.generated.tables.records.MessageDlqsRecord
+import org.jooq.generated.tables.references.MESSAGE_DLQS
 import java.time.ZoneOffset
 
 object DlqMessageSqlMapper {
@@ -62,7 +62,7 @@ object DlqMessageSqlMapper {
 }
 
 fun Record.toDomain(): DlqMessage = DlqMessage(
-    id = DlqMessageId(this[MessageDlqs.MESSAGE_DLQS.ID]),
+    id = this[MessageDlqs.MESSAGE_DLQS.ID]?.let { DlqMessageId(it) } ?: DlqMessageId(0),
     topic = this[MessageDlqs.MESSAGE_DLQS.TOPIC]!!,
     partition = this[MessageDlqs.MESSAGE_DLQS.PARTITION]!!,
     kafkaOffset = this[MessageDlqs.MESSAGE_DLQS.KAFKA_OFFSET]!!,

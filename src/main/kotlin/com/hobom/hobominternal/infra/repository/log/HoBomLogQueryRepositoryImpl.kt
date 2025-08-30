@@ -10,7 +10,7 @@ import com.hobom.hobominternal.domain.log.model.toConditions
 import com.hobom.hobominternal.exception.HoBomLogNotFoundException
 import com.hobom.hobominternal.shared.page.QueryResult
 import org.jooq.DSLContext
-import org.jooq.generated.Tables.HOBOM_LOGS
+import org.jooq.generated.tables.references.HOBOM_LOGS
 import org.jooq.impl.DSL
 import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
@@ -62,7 +62,7 @@ class HoBomLogQueryRepositoryImpl(
             .groupBy(HOBOM_LOGS.STATUS_CODE)
             .orderBy(HOBOM_LOGS.STATUS_CODE.asc())
             .fetch()
-            .map { LogStatusCount(statusCode = it[HOBOM_LOGS.STATUS_CODE], count = it.get(DSL.count())) }
+            .map { it[HOBOM_LOGS.STATUS_CODE]?.let { it1 -> LogStatusCount(statusCode = it1, count = it.get(DSL.count())) } }
     }
 
     override fun countRequestsGroupedByMinute(): List<RequestCount> {

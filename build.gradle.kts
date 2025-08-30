@@ -100,7 +100,7 @@ tasks.named<BootJar>("bootJar") {
     archiveFileName.set("hobom-internal-backend.jar")
 }
 
-val jooqGenDir = "$buildDir/generated-src/jooq/main"
+val jooqGenDir = "$buildDir/generated/jooq/main"
 
 jooq {
     version.set("3.20.5")
@@ -124,7 +124,7 @@ jooq {
                     )
                     .withTarget(
                         org.jooq.meta.jaxb.Target()
-                            .withPackageName("com.hobom.jooq")
+                            .withPackageName("org.jooq.generated")
                             .withDirectory(jooqGenDir),
                     )
             }
@@ -140,7 +140,7 @@ tasks.withType<KotlinCompile>().configureEach {
 
 flyway {
     val props = loadEnvProps()
-    url = "jdbc:postgresql://localhost:5432/bear"
+    url = props.getProperty("HOBOM_DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/bear"
     user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
     password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
     locations = arrayOf("filesystem:src/main/resources/db/migration")
