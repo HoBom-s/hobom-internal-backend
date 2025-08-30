@@ -37,6 +37,8 @@ fun loadEnvProps(): Properties {
 }
 
 val jooqVersion = "3.20.5"
+val dbUser = System.getenv("DB_USER") ?: loadEnvProps().getProperty("DB_USER") ?: "postgres"
+val dbPass = System.getenv("DB_PASSWORD") ?: loadEnvProps().getProperty("DB_PASSWORD") ?: "postgres"
 
 jooq {
     version.set(jooqVersion)
@@ -46,8 +48,8 @@ jooq {
                 jdbc.apply {
                     driver = "org.postgresql.Driver"
                     url = "jdbc:postgresql://ishisha.iptime.org:5432/bear"
-                    user = ""
-                    password = ""
+                    user = dbUser
+                    password = dbPass
                 }
                 generator.apply {
                     name = "org.jooq.codegen.DefaultGenerator"
