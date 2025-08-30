@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
 
   options {
     timestamps()
@@ -10,77 +10,52 @@ pipeline {
     // Docker Hub
     REGISTRY      = 'docker.io'
     IMAGE_REPO    = 'jjockrod/hobom-system'
-    SERVICE_NAME  = 'hobom-internal-backend'
+    SERVICE_NAME  = 'dev-hobom-internal-backend'
     IMAGE_TAG     = "${REGISTRY}/${IMAGE_REPO}:${SERVICE_NAME}-${env.BUILD_NUMBER}"
     IMAGE_LATEST  = "${REGISTRY}/${IMAGE_REPO}:${SERVICE_NAME}-latest"
     REGISTRY_CRED = 'dockerhub-cred'
     READ_CRED_ID  = 'dockerhub-readonly'
 
     // Remote server
-    APP_NAME      = 'hobom-internal-backend'
+    APP_NAME      = 'dev-hobom-internal-backend'
     DEPLOY_HOST   = 'ishisha.iptime.org'
     DEPLOY_PORT   = '22223'
     DEPLOY_USER   = 'infra-admin'
     SSH_CRED_ID   = 'deploy-ssh-key'
 
-    // Remote .env 경로 (서버에만 존재)
-    ENV_PATH      = '/etc/hobom-internal-backend/.env'
-
+    // Runtime
+    ENV_PATH      = '/etc/hobom-dev/dev-hobom-internal-backend/.env'
     HOST_PORT     = '8081'
     CONTAINER_PORT= '8081'
   }
 
   stages {
-    stage('Build & Push (Kaniko)') {
-      agent {
-        kubernetes {
-          yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-    - name: kaniko
-      image: gcr.io/kaniko-project/executor:debug
-      command: ["/busybox/sh","-c","sleep 9999999"]
-      volumeMounts:
-        - name: kaniko-docker-config
-          mountPath: /kaniko/.docker
-  volumes:
-    - name: kaniko-docker-config
-      emptyDir: {}
-          """
-        }
-      }
-      steps {
-        checkout scm
-        container('kaniko') {
-          withCredentials([usernamePassword(credentialsId: env.REGISTRY_CRED, usernameVariable: 'REG_USER', passwordVariable: 'REG_PASS')]) {
-            sh '''
-              set -eu
-              # mask credentials
-              set +x
-              AUTH="$(printf '%s' "$REG_USER:$REG_PASS" | base64 -w0 2>/dev/null || printf '%s' "$REG_USER:$REG_PASS" | base64)"
-              cat > /kaniko/.docker/config.json <<CFG
-{ "auths": { "https://index.docker.io/v1/": { "auth": "$AUTH" } } }
-CFG
-              set -x
+    stage('Checkout') {
+      steps { checkout scm }
+    }
 
-              /kaniko/executor \
-                --context "$WORKSPACE" \
-                --dockerfile "$WORKSPACE/Dockerfile" \
-                --destination "${IMAGE_TAG}" \
-                --destination "${IMAGE_LATEST}" \
-                --cache=false \
-                --verbosity=info
-            '''
-          }
+    stage('Build & Push Image (Docker)') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: env.REGISTRY_CRED, usernameVariable: 'REG_USER', passwordVariable: 'REG_PASS')]) {
+          sh '''
+            set -eu
+            export DOCKER_BUILDKIT=1
+
+            # login (masked)
+            set +x
+            echo "$REG_PASS" | docker login "$REGISTRY" -u "$REG_USER" --password-stdin
+            set -x
+
+            docker build -t "${IMAGE_TAG}" -t "${IMAGE_LATEST}" .
+            docker push "${IMAGE_TAG}"
+            docker push "${IMAGE_LATEST}"
+          '''
         }
       }
     }
 
     stage('Deploy container to server') {
       when { anyOf { branch 'develop'; branch 'main' } }
-      agent any
       steps {
         sshagent (credentials: [env.SSH_CRED_ID]) {
           withCredentials([usernamePassword(credentialsId: env.READ_CRED_ID, usernameVariable: 'PULL_USER', passwordVariable: 'PULL_PASS')]) {
@@ -88,7 +63,7 @@ CFG
 set -eux
 ssh -o StrictHostKeyChecking=no -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" \
   APP_NAME="$APP_NAME" \
-  IMAGE="$IMAGE_TAG" \
+  IMAGE="$IMAGE_LATEST" \
   CONTAINER="$APP_NAME" \
   ENV_PATH="$ENV_PATH" \
   HOST_PORT="$HOST_PORT" \
@@ -99,18 +74,22 @@ ssh -o StrictHostKeyChecking=no -p "$DEPLOY_PORT" "$DEPLOY_USER@$DEPLOY_HOST" \
 set -euo pipefail
 echo "[REMOTE] Deploying $APP_NAME with image $IMAGE"
 
+# docker check
 if ! command -v docker >/dev/null 2>&1; then
   echo "[REMOTE][ERROR] docker not found. Install docker and add $USER to docker group."
   exit 1
 fi
 
+# pull auth (masked)
 echo "$PULL_PASS" | docker login docker.io -u "$PULL_USER" --password-stdin
 
+# .env check
 if [ ! -f "$ENV_PATH" ]; then
   echo "[REMOTE][ERROR] $ENV_PATH not found. Create it first."
   exit 1
 fi
 
+# pull & replace
 docker pull "$IMAGE" || (echo "[REMOTE][ERROR] docker pull failed" && exit 1)
 
 if docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER" >/dev/null 2>&1; then
@@ -118,7 +97,9 @@ if docker ps -a --format '{{.Names}}' | grep -w "$CONTAINER" >/dev/null 2>&1; th
   docker rm "$CONTAINER" || true
 fi
 
+docker network create hobom-net || true
 docker run -d --name "$CONTAINER" \
+  --network hobom-net \
   --restart unless-stopped \
   --env-file "$ENV_PATH" \
   -p "${HOST_PORT}:${CONTAINER_PORT}" \
@@ -126,7 +107,7 @@ docker run -d --name "$CONTAINER" \
 
 docker ps --filter "name=$CONTAINER" --format "table {{.Names}}\\t{{.Image}}\\t{{.Status}}\\t{{.Ports}}"
 EOS
-'''
+            '''
           }
         }
       }
@@ -134,7 +115,6 @@ EOS
 
     stage('Smoke check (optional)') {
       when { anyOf { branch 'develop'; branch 'main' } }
-      agent any
       steps {
         sshagent (credentials: [env.SSH_CRED_ID]) {
           sh """
