@@ -1,4 +1,6 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.gradle.api.tasks.compile.JavaCompile
 import java.util.Properties
 
 plugins {
@@ -20,7 +22,6 @@ spotless {
         endWithNewline()
         indentWithSpaces()
     }
-
     kotlinGradle {
         target("*.gradle.kts")
         ktlint()
@@ -37,36 +38,24 @@ fun loadEnvProps(): Properties {
 }
 
 val jooqVersion = "3.20.5"
-val dbUser = System.getenv("DB_USER") ?: loadEnvProps().getProperty("DB_USER") ?: "postgres"
-val dbPass = System.getenv("DB_PASSWORD") ?: loadEnvProps().getProperty("DB_PASSWORD") ?: "postgres"
 
 jooq {
     version.set(jooqVersion)
+
     configurations {
         create("main") {
             jooqConfiguration.apply {
-                jdbc.apply {
-                    driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://ishisha.iptime.org:5432/bear"
-                    user = dbUser
-                    password = dbPass
-                }
-                generator.apply {
-                    name = "org.jooq.codegen.DefaultGenerator"
-                    database.apply {
-                        name = "org.jooq.meta.postgres.PostgresDatabase"
-                        inputSchema = "bear"
-                    }
-                    target.apply {
-                        packageName = "com.example.jooq.generated"
-                        directory = "$buildDir/generated/jooq"
-                    }
-                    generate.apply {
-                        isDaos = false
-                        isPojos = true
-                        isImmutablePojos = true
-                        isFluentSetters = true
-                    }
+                jdbc = null
+                generator.database.apply {
+                    name = "org.jooq.meta.extensions.ddl.DDLDatabase"
+                    properties.addAll(
+                        listOf(
+                            org.jooq.meta.jaxb.Property().withKey("scripts").withValue("src/main/resources/db/migration/*.sql"),
+                            org.jooq.meta.jaxb.Property().withKey("sort").withValue("true"),
+                            org.jooq.meta.jaxb.Property().withKey("defaultNameCase").withValue("lower"),
+                            org.jooq.meta.jaxb.Property().withKey("sql-dialect").withValue("Postgres"),
+                        ),
+                    )
                 }
             }
         }
@@ -75,7 +64,6 @@ jooq {
 
 flyway {
     val props = loadEnvProps()
-
     url = "jdbc:postgresql://localhost:5432/bear"
     user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
     password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
@@ -89,29 +77,14 @@ tasks.named<BootJar>("bootJar") {
     archiveFileName.set("hobom-internal-backend.jar")
 }
 
-tasks.named("generateJooq") {
-    doFirst {
-        val props = loadEnvProps()
-        val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
-            .configurations.getByName("main").jooqConfiguration
-
-        jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: error("DB_USER not set")
-        jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: error("DB_PASSWORD not set")
-    }
-}
-
 group = "com.hobom"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 extra["springCloudVersion"] = "2025.0.0"
 
@@ -124,9 +97,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-
     implementation("org.springframework.boot:spring-boot-starter-jooq")
     implementation("org.jooq:jooq:$jooqVersion")
     implementation("io.github.openfeign:feign-jackson:13.2")
@@ -137,12 +108,8 @@ dependencies {
     jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
     jooqGenerator("org.jooq:jooq-meta:$jooqVersion")
     jooqGenerator("org.jooq:jooq:$jooqVersion")
-    jooqGenerator("org.postgresql:postgresql:42.7.3")
+    jooqGenerator("org.jooq:jooq-meta-extensions:$jooqVersion")
 
-    // test
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "mockito-core")
-    }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
@@ -153,9 +120,7 @@ dependencies {
 }
 
 dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+    imports { mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}") }
 }
 
 kotlin {
@@ -170,8 +135,29 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks.withType<Test> { useJUnitPlatform() }
+
+val jooqGenDir = "$buildDir/generated-src/jooq/main"
+
+sourceSets {
+    named("main") {
+        java.srcDir(jooqGenDir)
+    }
+}
+
+tasks.named<JavaCompile>("compileJava") {
+    dependsOn("generateJooq")
+    source(jooqGenDir)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn("generateJooq")
+    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.freeCompilerArgs += "-Xjava-source-roots=$jooqGenDir"
+}
+
+tasks.named("bootJar") {
+    dependsOn("generateJooq")
 }
 
 tasks.register("formatKotlin") {
@@ -185,5 +171,3 @@ tasks.register("lintKotlin") {
     description = "Checks Kotlin code style using Spotless"
     dependsOn("spotlessCheck")
 }
-
-sourceSets["main"].java.srcDir("$buildDir/generated/jooq")
