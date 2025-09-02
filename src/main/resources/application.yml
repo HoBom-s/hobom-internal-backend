@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8080
 
 spring:
   config:
@@ -10,11 +10,11 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    baseline-version: 5
-    locations: classpath:db/migration
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true
+#    baseline-version: 5
+#    locations: classpath:db/migration
 
   kafka:
     bootstrap-servers: ${HOBOM_KAFKA}
