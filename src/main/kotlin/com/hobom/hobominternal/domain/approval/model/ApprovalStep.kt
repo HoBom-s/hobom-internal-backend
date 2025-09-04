@@ -2,13 +2,11 @@ package com.hobom.hobominternal.domain.approval.model
 
 import java.time.Instant
 
-data class ApprovalStep(
-    val id: ApprovalStepId? = null,
-    val approvalId: ApprovalRequestId,
-    val stageOrder: Long,
-    val mode: ApprovalStepMode,
-    val status: ApprovalStepStatus,
-    val comment: String,
-    val decidedBy: String,
-    val decidedAt: Instant,
+class ApprovalStep(
+    var id: ApprovalStepId? = null,
+    val approverIds: Set<String>,
+    var status: ApprovalStepStatus,
+    var decidedBy: String? = null,
+    var decidedAt: Instant? = null,
+    var comment: String? = null,
 )
