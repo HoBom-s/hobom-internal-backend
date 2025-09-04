@@ -1,5 +1,7 @@
 package com.hobom.hobominternal.domain.approval.model
 
+import org.springframework.stereotype.Component
+
 @JvmInline
 value class ApprovalRequestId(private val value: Long) {
     init {
@@ -9,4 +11,9 @@ value class ApprovalRequestId(private val value: Long) {
     override fun toString(): String = value.toString()
 
     fun toRaw(): Long = value
+}
+
+@Component
+class TenantIdProvider {
+    fun current(): ApprovalRequestTenantId = ApprovalRequestTenantId("hobom")
 }
