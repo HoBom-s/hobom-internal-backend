@@ -73,7 +73,7 @@ dependencies {
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("io.mockk:mockk:1.13.9")
-    testImplementation("io.kotest:kotest-assertions-core:5.8.0")
+    testImplementation("io.kotest:kotest-assertions-core:6.0.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
 }
 
