@@ -144,8 +144,9 @@ flyway {
     user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
     password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
     locations = arrayOf("filesystem:src/main/resources/db/migration")
+    schemas = arrayOf("bear")
     baselineOnMigrate = true
-    baselineVersion = "5"
+    baselineVersion = "3"
 }
 
 tasks.register("formatKotlin") {
