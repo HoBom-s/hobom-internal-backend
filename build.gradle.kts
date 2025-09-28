@@ -3,9 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.util.Properties
 
-val skipJooq = (System.getenv("SKIP_JOOQ") ?: project.findProperty("skipJooq") as? String) == "true"
-val skipFlyway = (System.getenv("SKIP_FLYWAY") ?: project.findProperty("skipFlyway") as? String) == "true"
-
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
@@ -70,7 +67,6 @@ dependencies {
     jooqGenerator("org.jooq:jooq-meta:3.20.5")
     jooqGenerator("org.jooq:jooq:3.20.5")
     jooqGenerator("org.jooq:jooq-meta-extensions:3.20.5")
-    jooqGenerator("org.postgresql:postgresql:42.7.7")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
@@ -111,29 +107,20 @@ jooq {
     configurations {
         create("main") {
             jooqConfiguration.apply {
-                jdbc.apply {
-                    driver = "org.postgresql.Driver"
-                    url = System.getenv("HOBOM_DATABASE_URL")
-                    user = System.getenv("DB_USER")
-                    password = System.getenv("DB_PASSWORD")
-                }
                 generator = org.jooq.meta.jaxb.Generator()
                     .withName("org.jooq.codegen.KotlinGenerator")
                     .withDatabase(
                         org.jooq.meta.jaxb.Database()
-                            .withName("org.jooq.meta.postgres.PostgresDatabase")
-                            .withSchemata(
-                                org.jooq.meta.jaxb.SchemaMappingType()
-                                    .withInputSchema("bear")
-                                    .withOutputSchemaToDefault(true),
+                            .withName("org.jooq.meta.extensions.ddl.DDLDatabase")
+                            .withProperties(
+                                listOf(
+                                    org.jooq.meta.jaxb.Property().withKey("scripts")
+                                        .withValue("src/main/resources/db/migration/*.sql"),
+                                    org.jooq.meta.jaxb.Property().withKey("sort").withValue("true"),
+                                    org.jooq.meta.jaxb.Property().withKey("defaultNameCase").withValue("lower"),
+                                    org.jooq.meta.jaxb.Property().withKey("sql-dialect").withValue("Postgres"),
+                                ),
                             ),
-                    )
-                    .withGenerate(
-                        org.jooq.meta.jaxb.Generate()
-                            .withGlobalObjectReferences(true)
-                            .withRecords(true)
-                            .withDaos(false)
-                            .withPojos(false),
                     )
                     .withTarget(
                         org.jooq.meta.jaxb.Target()
@@ -171,8 +158,4 @@ tasks.register("lintKotlin") {
     group = "formatting"
     description = "Checks Kotlin code style using Spotless"
     dependsOn("spotlessCheck")
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-    if (!skipJooq) dependsOn("generateJooq")
 }
