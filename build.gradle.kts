@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jooq.meta.derby.sys.Sys
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.util.Properties
 
@@ -123,7 +122,7 @@ jooq {
                             .withSchemata(
                                 org.jooq.meta.jaxb.SchemaMappingType()
                                     .withInputSchema("bear")
-                                    .withOutputSchemaToDefault(true)
+                                    .withOutputSchemaToDefault(true),
                             ),
                     )
                     .withGenerate(
@@ -131,7 +130,7 @@ jooq {
                             .withGlobalObjectReferences(true)
                             .withRecords(true)
                             .withDaos(false)
-                            .withPojos(false)
+                            .withPojos(false),
                     )
                     .withTarget(
                         org.jooq.meta.jaxb.Target()

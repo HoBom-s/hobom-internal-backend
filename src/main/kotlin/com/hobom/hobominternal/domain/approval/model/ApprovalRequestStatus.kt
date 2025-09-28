@@ -8,5 +8,5 @@ enum class ApprovalRequestStatus(
 ) : DescribableEnum {
     PENDING("PENDING", "approval-request-status-pending"),
     APPROVED("APPROVED", "approval-request-status-approved"),
-    REJECTED("REJECTED", "approval-request-status-rejected")
+    REJECTED("REJECTED", "approval-request-status-rejected"),
 }

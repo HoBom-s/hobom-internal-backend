@@ -9,7 +9,7 @@ import org.jooq.generated.tables.references.APPROVAL_REQUEST
 object ApprovalRequestSqlMapper {
     fun toInsertMap(
         insert: InsertSetStep<ApprovalRequestRecord>,
-        request: ApprovalRequest
+        request: ApprovalRequest,
     ): Query {
         return insert
             .set(APPROVAL_REQUEST.ID, request.id.toRaw())

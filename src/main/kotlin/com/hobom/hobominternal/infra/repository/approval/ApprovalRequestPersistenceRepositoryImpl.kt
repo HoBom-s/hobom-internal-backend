@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ApprovalRequestPersistenceRepositoryImpl(
-    private val dsl: DSLContext
+    private val dsl: DSLContext,
 ) : ApprovalRequestPersistenceRepository {
     override fun save(approvalRequest: ApprovalRequest) {
         ApprovalRequestSqlMapper
