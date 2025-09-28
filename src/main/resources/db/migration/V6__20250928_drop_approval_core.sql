@@ -1,8 +1,8 @@
-DROP TABLE approval_callback;
-DROP TABLE approval_action;
-DROP TABLE approval_step_approver;
-DROP TABLE approval_step;
-DROP TABLE approval_stage;
-DROP TABLE approval_request;
-DROP TABLE idempotency_keys;
-DROP TABLE approval_outbox;
+DROP TABLE IF EXISTS approval_callback CASCADE;
+DROP TABLE IF EXISTS approval_action CASCADE;
+DROP TABLE IF EXISTS approval_step_approver CASCADE;
+DROP TABLE IF EXISTS approval_step CASCADE;
+DROP TABLE IF EXISTS approval_stage CASCADE;
+DROP TABLE IF EXISTS approval_request CASCADE;
+DROP TABLE IF EXISTS idempotency_keys CASCADE;
+DROP TABLE IF EXISTS approval_outbox CASCADE;
