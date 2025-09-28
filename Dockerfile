@@ -4,9 +4,11 @@ COPY gradlew settings.gradle.kts build.gradle.kts ./
 COPY gradle gradle
 RUN chmod +x gradlew
 COPY . .
-RUN ./gradlew --no-daemon --stacktrace --warning-mode all clean bootJar -x test \
- && ls -l build/libs \
- && cp build/libs/*.jar /workspace/app.jar
+RUN ./gradlew --no-daemon --stacktrace --warning-mode all \
+    clean bootJar -x test \
+    -PskipJooq=true -PskipFlyway=true \
+    && ls -l build/libs \
+    && cp build/libs/*.jar /workspace/app.jar
 
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app

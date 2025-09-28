@@ -3,6 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.util.Properties
 
+val skipJooq = (System.getenv("SKIP_JOOQ") ?: project.findProperty("skipJooq") as? String) == "true"
+val skipFlyway = (System.getenv("SKIP_FLYWAY") ?: project.findProperty("skipFlyway") as? String) == "true"
+
 plugins {
     kotlin("jvm") version "1.9.25"
     kotlin("plugin.spring") version "1.9.25"
@@ -172,4 +175,11 @@ tasks.register("lintKotlin") {
 
 tasks.named("generateJooq").configure {
     dependsOn("flywayMigrate")
+}
+
+tasks.named("flywayMigrate").configure { onlyIf { !skipFlyway } }
+tasks.named("generateJooq").configure { onlyIf { !skipJooq } }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    if (!skipJooq) dependsOn("generateJooq")
 }
