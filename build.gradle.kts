@@ -173,13 +173,6 @@ tasks.register("lintKotlin") {
     dependsOn("spotlessCheck")
 }
 
-tasks.named("generateJooq").configure {
-    dependsOn("flywayMigrate")
-}
-
-tasks.named("flywayMigrate").configure { onlyIf { !skipFlyway } }
-tasks.named("generateJooq").configure { onlyIf { !skipJooq } }
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     if (!skipJooq) dependsOn("generateJooq")
 }
