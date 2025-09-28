@@ -1,0 +1,2 @@
+ALTER TABLE approval_stage
+  ALTER COLUMN status SET DEFAULT 'PENDING';
