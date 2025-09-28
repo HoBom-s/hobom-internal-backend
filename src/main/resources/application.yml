@@ -10,11 +10,12 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
-#  flyway:
-#    enabled: true
-#    baseline-on-migrate: true
-#    baseline-version: 5
-#    locations: classpath:db/migration
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 5
+    default-schema: bear
+    locations: classpath:db/migration
 
   kafka:
     bootstrap-servers: ${HOBOM_KAFKA}
