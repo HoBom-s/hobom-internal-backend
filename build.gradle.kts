@@ -144,7 +144,7 @@ flyway {
     user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
     password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
     locations = arrayOf("filesystem:src/main/resources/db/migration")
-    schemas = arrayOf("bear")
+    schemas = arrayOf("public")
     baselineOnMigrate = true
     baselineVersion = "3"
 }
