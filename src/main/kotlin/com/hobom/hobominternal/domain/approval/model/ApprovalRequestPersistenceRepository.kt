@@ -1,5 +1,7 @@
 package com.hobom.hobominternal.domain.approval.model
 
 interface ApprovalRequestPersistenceRepository {
-    fun save(approvalRequest: ApprovalRequest)
+    fun load(id: ApprovalRequestId): ApprovalRequest
+
+    fun save(approvalRequest: ApprovalRequest): ApprovalRequest
 }
