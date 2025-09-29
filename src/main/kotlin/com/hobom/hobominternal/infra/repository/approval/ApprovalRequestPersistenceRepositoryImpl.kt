@@ -20,9 +20,12 @@ class ApprovalRequestPersistenceRepositoryImpl(
         return ApprovalRequestSqlMapper.fromRecord(approvalRequestRecord)
     }
 
-    override fun save(approvalRequest: ApprovalRequest) {
-        ApprovalRequestSqlMapper
+    override fun save(approvalRequest: ApprovalRequest): ApprovalRequest {
+        val approvalRequestRecord = ApprovalRequestSqlMapper
             .toInsertMap(dsl.insertInto(APPROVAL_REQUEST), approvalRequest)
-            .execute()
+            .returning(APPROVAL_REQUEST.ID)
+            .fetchOne() ?: throw ApprovalException.NotFoundException()
+
+        return ApprovalRequestSqlMapper.fromRecord(approvalRequestRecord)
     }
 }

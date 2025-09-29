@@ -15,7 +15,7 @@ class ApprovalRequestPersistenceAdapter(
         return approvalRequestPersistenceRepository.load(id)
     }
 
-    override fun save(command: CreateApprovalRequestCommand) {
-        approvalRequestPersistenceRepository.save(command.toSaveModel())
+    override fun save(command: CreateApprovalRequestCommand): ApprovalRequest {
+        return approvalRequestPersistenceRepository.save(command.toSaveModel())
     }
 }

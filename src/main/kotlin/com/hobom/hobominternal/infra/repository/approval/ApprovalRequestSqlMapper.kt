@@ -3,8 +3,8 @@ package com.hobom.hobominternal.infra.repository.approval
 import com.hobom.hobominternal.domain.approval.model.ApprovalRequest
 import com.hobom.hobominternal.domain.approval.model.ApprovalRequestId
 import com.hobom.hobominternal.domain.approval.model.ApprovalRequestStatus
+import org.jooq.InsertSetMoreStep
 import org.jooq.InsertSetStep
-import org.jooq.Query
 import org.jooq.generated.tables.records.ApprovalRequestRecord
 import org.jooq.generated.tables.references.APPROVAL_REQUEST
 import java.time.Instant
@@ -13,7 +13,7 @@ object ApprovalRequestSqlMapper {
     fun toInsertMap(
         insert: InsertSetStep<ApprovalRequestRecord>,
         request: ApprovalRequest,
-    ): Query {
+    ): InsertSetMoreStep<ApprovalRequestRecord> {
         return insert
             .set(APPROVAL_REQUEST.TITLE, request.title)
             .set(APPROVAL_REQUEST.CONTENT, request.content)
