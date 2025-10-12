@@ -10,7 +10,7 @@ class WebConfig : WebMvcConfigurer {
         registry.addMapping("/hobom-internal/**")
             .allowedOrigins(
                 "http://localhost:3000",
-                "https://hobom-tech-blog.vercel.app/"
+                "https://hobom-tech-blog.vercel.app/",
             )
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedHeaders("*")
