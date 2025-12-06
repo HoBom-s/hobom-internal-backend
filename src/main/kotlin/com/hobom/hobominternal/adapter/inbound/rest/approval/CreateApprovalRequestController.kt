@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController
 class CreateApprovalRequestController(
     private val createApprovalRequestUseCase: CreateApprovalRequestUseCase,
 ) {
-    @Operation(summary = "Find DLQ logs", description = "Find by id")
+    @Operation(summary = "Create Approval Request", description = "Create Approval")
     @PostMapping("/approval-request")
     fun create(@RequestBody request: CreateApprovalRequest): ResponseEntity<Unit> {
         createApprovalRequestUseCase.invoke(request.toCommand())
