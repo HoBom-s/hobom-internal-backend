@@ -1,9 +1,9 @@
 package com.hobom.hobominternal.infra.repository.message
 
-import com.example.jooq.generated.Tables.MESSAGE_DELIVERY_HISTORIES
 import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryCreateRequest
 import com.hobom.hobominternal.domain.message.model.HoBomMessageDeliveryHistoryPersistenceRepository
 import org.jooq.DSLContext
+import org.jooq.generated.tables.references.MESSAGE_DELIVERY_HISTORIES
 import org.springframework.stereotype.Repository
 import java.time.Instant
 

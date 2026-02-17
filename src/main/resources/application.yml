@@ -1,20 +1,24 @@
+server:
+  port: 8081
+
 spring:
   config:
     import: optional:file:.env
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/bear
+    url: ${HOBOM_DATABASE_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
 
   flyway:
     enabled: true
     baseline-on-migrate: true
-    baseline-version: 3
+    baseline-version: 5
+    default-schema: public
     locations: classpath:db/migration
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${HOBOM_KAFKA}
     consumer:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer

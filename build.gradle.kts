@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 import java.util.Properties
 
 plugins {
@@ -19,7 +22,6 @@ spotless {
         endWithNewline()
         indentWithSpaces()
     }
-
     kotlinGradle {
         target("*.gradle.kts")
         ktlint()
@@ -29,82 +31,18 @@ spotless {
 fun loadEnvProps(): Properties {
     val props = Properties()
     val envFile = rootProject.file(".env")
-    if (envFile.exists()) {
-        envFile.inputStream().use { props.load(it) }
-    }
+    if (envFile.exists()) envFile.inputStream().use { props.load(it) }
     return props
-}
-
-val jooqVersion = "3.20.5"
-
-jooq {
-    version.set(jooqVersion)
-    configurations {
-        create("main") {
-            jooqConfiguration.apply {
-                jdbc.apply {
-                    driver = "org.postgresql.Driver"
-                    url = "jdbc:postgresql://localhost:5432/bear"
-                    user = ""
-                    password = ""
-                }
-                generator.apply {
-                    name = "org.jooq.codegen.DefaultGenerator"
-                    database.apply {
-                        name = "org.jooq.meta.postgres.PostgresDatabase"
-                        inputSchema = "bear"
-                    }
-                    target.apply {
-                        packageName = "com.example.jooq.generated"
-                        directory = "$buildDir/generated/jooq"
-                    }
-                    generate.apply {
-                        isDaos = false
-                        isPojos = true
-                        isImmutablePojos = true
-                        isFluentSetters = true
-                    }
-                }
-            }
-        }
-    }
-}
-
-flyway {
-    val props = loadEnvProps()
-
-    url = "jdbc:postgresql://localhost:5432/bear"
-    user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
-    password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
-    locations = arrayOf("filesystem:src/main/resources/db/migration")
-    schemas = arrayOf("bear")
-    baselineOnMigrate = true
-    baselineVersion = "3"
-}
-
-tasks.named("generateJooq") {
-    doFirst {
-        val props = loadEnvProps()
-        val jooqConfig = (project.extensions.getByName("jooq") as nu.studer.gradle.jooq.JooqExtension)
-            .configurations.getByName("main").jooqConfiguration
-
-        jooqConfig.jdbc.user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: error("DB_USER not set")
-        jooqConfig.jdbc.password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: error("DB_PASSWORD not set")
-    }
 }
 
 group = "com.hobom"
 version = "0.0.1-SNAPSHOT"
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+    toolchain { languageVersion = JavaLanguageVersion.of(21) }
 }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 extra["springCloudVersion"] = "2025.0.0"
 
@@ -117,25 +55,19 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("org.springframework.boot:spring-boot-starter-mail")
-
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-
     implementation("org.springframework.boot:spring-boot-starter-jooq")
-    implementation("org.jooq:jooq:$jooqVersion")
+    implementation("org.jooq:jooq:3.20.5")
     implementation("io.github.openfeign:feign-jackson:13.2")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
 
     // jOOQ Codegen runtime
-    jooqGenerator("org.jooq:jooq-codegen:$jooqVersion")
-    jooqGenerator("org.jooq:jooq-meta:$jooqVersion")
-    jooqGenerator("org.jooq:jooq:$jooqVersion")
-    jooqGenerator("org.postgresql:postgresql:42.7.3")
+    jooqGenerator("org.jooq:jooq-codegen:3.20.5")
+    jooqGenerator("org.jooq:jooq-meta:3.20.5")
+    jooqGenerator("org.jooq:jooq:3.20.5")
+    jooqGenerator("org.jooq:jooq-meta-extensions:3.20.5")
 
-    // test
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(module = "mockito-core")
-    }
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("com.tngtech.archunit:archunit-junit5:1.3.0")
     testImplementation("com.tngtech.archunit:archunit-junit5-engine:1.3.0")
@@ -146,14 +78,13 @@ dependencies {
 }
 
 dependencyManagement {
-    imports {
-        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-    }
+    imports { mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}") }
 }
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs.addAll("-Xjsr305=strict")
+        freeCompilerArgs.add("-Xjsr305=strict")
+        jvmTarget.set(JvmTarget.JVM_21)
     }
 }
 
@@ -163,8 +94,59 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+tasks.withType<Test> { useJUnitPlatform() }
+
+tasks.named<BootJar>("bootJar") {
+    archiveFileName.set("hobom-internal-backend.jar")
+}
+
+val jooqGenDir = "$buildDir/generated/jooq/main"
+
+jooq {
+    version.set("3.20.5")
+    configurations {
+        create("main") {
+            jooqConfiguration.apply {
+                generator = org.jooq.meta.jaxb.Generator()
+                    .withName("org.jooq.codegen.KotlinGenerator")
+                    .withDatabase(
+                        org.jooq.meta.jaxb.Database()
+                            .withName("org.jooq.meta.extensions.ddl.DDLDatabase")
+                            .withProperties(
+                                listOf(
+                                    org.jooq.meta.jaxb.Property().withKey("scripts")
+                                        .withValue("src/main/resources/db/migration/*.sql"),
+                                    org.jooq.meta.jaxb.Property().withKey("sort").withValue("true"),
+                                    org.jooq.meta.jaxb.Property().withKey("defaultNameCase").withValue("lower"),
+                                    org.jooq.meta.jaxb.Property().withKey("sql-dialect").withValue("Postgres"),
+                                ),
+                            ),
+                    )
+                    .withTarget(
+                        org.jooq.meta.jaxb.Target()
+                            .withPackageName("org.jooq.generated")
+                            .withDirectory(jooqGenDir),
+                    )
+            }
+        }
+    }
+}
+
+kotlin.sourceSets.getByName("main").kotlin.srcDir(jooqGenDir)
+
+tasks.withType<KotlinCompile>().configureEach {
+    dependsOn("generateJooq")
+}
+
+flyway {
+    val props = loadEnvProps()
+    url = props.getProperty("HOBOM_DATABASE_URL") ?: "jdbc:postgresql://localhost:5432/bear"
+    user = props.getProperty("DB_USER") ?: System.getenv("DB_USER") ?: "postgres"
+    password = props.getProperty("DB_PASSWORD") ?: System.getenv("DB_PASSWORD") ?: "postgres"
+    locations = arrayOf("filesystem:src/main/resources/db/migration")
+    schemas = arrayOf("public")
+    baselineOnMigrate = true
+    baselineVersion = "3"
 }
 
 tasks.register("formatKotlin") {
@@ -178,5 +160,3 @@ tasks.register("lintKotlin") {
     description = "Checks Kotlin code style using Spotless"
     dependsOn("spotlessCheck")
 }
-
-sourceSets["main"].java.srcDir("$buildDir/generated/jooq")

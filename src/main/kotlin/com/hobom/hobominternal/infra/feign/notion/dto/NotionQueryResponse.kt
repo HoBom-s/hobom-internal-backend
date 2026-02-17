@@ -13,12 +13,15 @@ data class DatabaseQueryResponse(
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class BlockChildrenResponse(
     val results: List<NotionBlock>,
+    val next_cursor: String? = null,
+    val has_more: Boolean = false,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class NotionBlock(
     val id: String,
     val type: String,
+    val has_children: Boolean = false,
     val paragraph: NotionRichTextBlock? = null,
     val heading_1: NotionRichTextBlock? = null,
     val heading_2: NotionRichTextBlock? = null,

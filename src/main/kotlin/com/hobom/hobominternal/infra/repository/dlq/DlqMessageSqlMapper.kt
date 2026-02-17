@@ -1,17 +1,17 @@
 package com.hobom.hobominternal.infra.repository.dlq
 
-import com.example.jooq.generated.Tables.MESSAGE_DLQS
-import com.example.jooq.generated.tables.MessageDlqs
-import com.example.jooq.generated.tables.records.MessageDlqsRecord
 import com.hobom.hobominternal.domain.dlq.model.DlqMessage
 import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
 import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
 import com.hobom.hobominternal.domain.dlq.model.DlqStatus
 import org.jooq.DSLContext
 import org.jooq.InsertSetStep
-import org.jooq.JSONB
+import org.jooq.JSON
 import org.jooq.Query
 import org.jooq.Record
+import org.jooq.generated.tables.MessageDlqs
+import org.jooq.generated.tables.records.MessageDlqsRecord
+import org.jooq.generated.tables.references.MESSAGE_DLQS
 import java.time.ZoneOffset
 
 object DlqMessageSqlMapper {
@@ -24,7 +24,7 @@ object DlqMessageSqlMapper {
             .set(MESSAGE_DLQS.PARTITION, request.partition)
             .set(MESSAGE_DLQS.KAFKA_OFFSET, request.kafkaOffset)
             .set(MESSAGE_DLQS.KEY, request.key)
-            .set(MESSAGE_DLQS.VALUE, JSONB.valueOf(request.value))
+            .set(MESSAGE_DLQS.VALUE, JSON.valueOf(request.value))
             .set(MESSAGE_DLQS.TRACE_ID, request.traceId)
             .set(MESSAGE_DLQS.MESSAGE_TYPE, request.messageType)
             .set(MESSAGE_DLQS.ERROR_MESSAGE, request.errorMessage)
@@ -44,7 +44,7 @@ object DlqMessageSqlMapper {
             .set(MESSAGE_DLQS.PARTITION, request.partition)
             .set(MESSAGE_DLQS.KAFKA_OFFSET, request.kafkaOffset)
             .set(MESSAGE_DLQS.KEY, request.key)
-            .set(MESSAGE_DLQS.VALUE, JSONB.valueOf(request.value))
+            .set(MESSAGE_DLQS.VALUE, JSON.valueOf(request.value))
             .set(MESSAGE_DLQS.TRACE_ID, request.traceId)
             .set(MESSAGE_DLQS.MESSAGE_TYPE, request.messageType)
             .set(MESSAGE_DLQS.ERROR_MESSAGE, request.errorMessage)
@@ -62,7 +62,7 @@ object DlqMessageSqlMapper {
 }
 
 fun Record.toDomain(): DlqMessage = DlqMessage(
-    id = DlqMessageId(this[MessageDlqs.MESSAGE_DLQS.ID]),
+    id = this[MessageDlqs.MESSAGE_DLQS.ID]?.let { DlqMessageId(it) } ?: DlqMessageId(0),
     topic = this[MessageDlqs.MESSAGE_DLQS.TOPIC]!!,
     partition = this[MessageDlqs.MESSAGE_DLQS.PARTITION]!!,
     kafkaOffset = this[MessageDlqs.MESSAGE_DLQS.KAFKA_OFFSET]!!,
