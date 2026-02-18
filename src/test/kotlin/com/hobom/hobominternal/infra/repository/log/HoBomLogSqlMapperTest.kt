@@ -1,12 +1,12 @@
 package com.hobom.hobominternal.infra.repository.log
 
-import com.example.jooq.generated.tables.records.HobomLogsRecord
 import com.hobom.hobominternal.domain.log.model.HoBomLog
 import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.model.HttpMethodType
 import com.hobom.hobominternal.domain.log.model.ServiceType
 import org.assertj.core.api.Assertions.assertThat
-import org.jooq.JSONB
+import org.jooq.JSON
+import org.jooq.generated.tables.records.HobomLogsRecord
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -52,7 +52,7 @@ class HoBomLogSqlMapperTest {
         record.statusCode = 200
         record.host = "localhost"
         record.userId = "user-1"
-        record.payload = JSONB.valueOf("""{"key":"value"}""")
+        record.payload = JSON.valueOf("""{"key":"value"}""")
         record.timestamp = now
         record.createdAt = now
         record.updatedAt = now

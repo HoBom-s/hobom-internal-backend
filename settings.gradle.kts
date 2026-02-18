@@ -1,1 +1,1 @@
-rootProject.name = "hoobm-internal"
+rootProject.name = "hobom-internal"

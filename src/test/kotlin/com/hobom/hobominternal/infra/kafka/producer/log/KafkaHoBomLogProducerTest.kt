@@ -6,11 +6,13 @@ import com.hobom.hobominternal.domain.log.model.HoBomLogLevel
 import com.hobom.hobominternal.domain.log.model.HttpMethodType
 import com.hobom.hobominternal.domain.log.model.ServiceType
 import com.hobom.hobominternal.shared.kafka.KafkaTopics
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.test.context.TestConstructor
 
+@Disabled("Integration test — requires a running Kafka broker. Run manually.")
 @SpringBootTest
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class KafkaHoBomLogProducerTest(

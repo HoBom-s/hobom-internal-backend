@@ -1,7 +1,10 @@
 package com.hobom.hobominternal.config
 
+import com.hobom.hobominternal.domain.dlq.model.DlqMessageCreateRequest
+import com.hobom.hobominternal.domain.dlq.port.outbound.DlqMessagePersistencePort
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,13 +23,16 @@ import org.springframework.util.backoff.FixedBackOff
 @EnableScheduling
 class KafkaConsumerConfig(
     private val kafkaProperties: KafkaProperties,
+    private val dlqMessagePersistencePort: DlqMessagePersistencePort,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Bean(name = ["logKafkaListenerContainerFactory"])
     fun logKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = createConsumerFactory("log-consumer-group")
         factory.containerProperties.ackMode = AckMode.BATCH
-        factory.setCommonErrorHandler(createErrorHandler())
+        factory.setCommonErrorHandler(createErrorHandler(::saveLogRecordToDlq))
         return factory
     }
 
@@ -35,7 +41,18 @@ class KafkaConsumerConfig(
         val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
         factory.consumerFactory = createConsumerFactory("message-consumer-group")
         factory.containerProperties.ackMode = AckMode.BATCH
-        factory.setCommonErrorHandler(createErrorHandler())
+        // DLQ 저장은 KafkaMessageConsumer.onConsumeFailed 에서 처리됨 — 여기서는 로그만 기록
+        factory.setCommonErrorHandler(
+            createErrorHandler { record, exception ->
+                log.error(
+                    "Message consumer exhausted retries: topic={} partition={} offset={}",
+                    record.topic(),
+                    record.partition(),
+                    record.offset(),
+                    exception,
+                )
+            },
+        )
         return factory
     }
 
@@ -49,14 +66,34 @@ class KafkaConsumerConfig(
         return DefaultKafkaConsumerFactory(props)
     }
 
-    private fun createErrorHandler(): DefaultErrorHandler {
-        val recover = ConsumerRecordRecoverer { record, exception ->
-            println("DLQ 발생: ${record.topic()}-${record.partition()}-${record.offset()} | ${exception.message}")
-            // TODO: DLQ 저장 or Discord 알림
+    private fun createErrorHandler(recoverer: ConsumerRecordRecoverer): DefaultErrorHandler =
+        DefaultErrorHandler(recoverer, FixedBackOff(1000L, 2)).apply {
+            isAckAfterHandle = true
         }
 
-        return DefaultErrorHandler(recover, FixedBackOff(1000L, 2)).apply {
-            isAckAfterHandle = true
+    private fun saveLogRecordToDlq(record: org.apache.kafka.clients.consumer.ConsumerRecord<*, *>, exception: Exception) {
+        log.error(
+            "Log consumer exhausted retries — saving to DLQ: topic={} partition={} offset={}",
+            record.topic(),
+            record.partition(),
+            record.offset(),
+            exception,
+        )
+        runCatching {
+            dlqMessagePersistencePort.save(
+                DlqMessageCreateRequest(
+                    topic = record.topic(),
+                    partition = record.partition(),
+                    kafkaOffset = record.offset(),
+                    key = record.key()?.toString(),
+                    value = record.value()?.toString() ?: "",
+                    traceId = null,
+                    messageType = null,
+                    errorMessage = exception.message,
+                ),
+            )
+        }.onFailure { e ->
+            log.error("Failed to persist DLQ record: topic={} partition={} offset={}", record.topic(), record.partition(), record.offset(), e)
         }
     }
 }

@@ -10,7 +10,6 @@ class SaveHoBomLogBatchHandler(
     private val useCase: SaveBulkLogUseCase,
 ) : KafkaBatchMessageHandler<SaveLogCommand> {
     override fun handle(messages: List<SaveLogCommand>) {
-        println(messages)
         useCase.invoke(messages)
     }
 }
