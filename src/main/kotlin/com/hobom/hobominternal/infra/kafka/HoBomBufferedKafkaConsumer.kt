@@ -2,6 +2,7 @@ package com.hobom.hobominternal.infra.kafka
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import java.util.Collections
 
@@ -12,6 +13,7 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
     private val batchSize: Int = 3,
     private val flushDelayMillis: Long = 5000L,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
     private val buffer: MutableList<T> = Collections.synchronizedList(mutableListOf())
 
     open fun consume(record: ConsumerRecord<String, String>) {
@@ -23,7 +25,7 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
             buffer.addAll(messages)
             flushIfNeeded()
         } catch (e: Exception) {
-            e.printStackTrace()
+            log.error("Failed to consume record topic={} partition={} offset={}", record.topic(), record.partition(), record.offset(), e)
         }
     }
 
@@ -35,12 +37,14 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
 
     @Scheduled(fixedDelayString = "\${kafka.flush-delay:5000}")
     fun flush() {
-        if (buffer.isEmpty()) {
-            return
+        val snapshot = synchronized(buffer) {
+            if (buffer.isEmpty()) return
+            buffer.toList().also { buffer.clear() }
         }
-        println("Buffer : ${buffer.toList()}")
-
-        handler.handle(buffer.toList())
-        buffer.clear()
+        try {
+            handler.handle(snapshot)
+        } catch (e: Exception) {
+            log.error("Failed to flush {} messages to handler", snapshot.size, e)
+        }
     }
 }

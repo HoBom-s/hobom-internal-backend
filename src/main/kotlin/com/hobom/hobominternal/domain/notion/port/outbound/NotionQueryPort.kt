@@ -1,11 +1,9 @@
 package com.hobom.hobominternal.domain.notion.port.outbound
 
-import com.hobom.hobominternal.infra.feign.notion.dto.BlockChildrenResponse
-import com.hobom.hobominternal.infra.feign.notion.dto.DatabaseQueryResponse
-import com.hobom.hobominternal.infra.feign.notion.dto.NotionQueryRequest
+import com.hobom.hobominternal.domain.notion.model.NotionArticlesResult
 
 interface NotionQueryPort {
-    fun getDataBaseByRequest(request: NotionQueryRequest): DatabaseQueryResponse
+    fun getArticles(pageSize: Int, cursor: String?): NotionArticlesResult
 
-    fun getBlockByPageId(id: String): BlockChildrenResponse
+    fun getBlockMarkdownByPageId(id: String): String
 }
