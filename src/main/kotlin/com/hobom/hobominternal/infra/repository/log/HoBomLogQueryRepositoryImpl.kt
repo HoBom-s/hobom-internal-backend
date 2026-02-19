@@ -54,25 +54,29 @@ class HoBomLogQueryRepositoryImpl(
     }
 
     override fun countStatusCode(): List<LogStatusCount> {
-        val oneHourAgo = LocalDateTime.now().minusHours(24)
+        val since24HoursAgo = LocalDateTime.now().minusHours(24)
 
         return dsl.select(HOBOM_LOGS.STATUS_CODE, DSL.count())
             .from(HOBOM_LOGS)
-            .where(HOBOM_LOGS.CREATED_AT.gt(oneHourAgo))
+            .where(HOBOM_LOGS.CREATED_AT.gt(since24HoursAgo))
             .groupBy(HOBOM_LOGS.STATUS_CODE)
             .orderBy(HOBOM_LOGS.STATUS_CODE.asc())
             .fetch()
-            .map { it[HOBOM_LOGS.STATUS_CODE]?.let { it1 -> LogStatusCount(statusCode = it1, count = it.get(DSL.count())) } }
+            .mapNotNull { row ->
+                row[HOBOM_LOGS.STATUS_CODE]?.let { statusCode ->
+                    LogStatusCount(statusCode = statusCode, count = row.get(DSL.count()))
+                }
+            }
     }
 
     override fun countRequestsGroupedByMinute(): List<RequestCount> {
-        val oneHourAgo = LocalDateTime.now().minusHours(24)
+        val since24HoursAgo = LocalDateTime.now().minusHours(24)
         val minuteField = DSL.field("date_trunc('minute', {0})", OffsetDateTime::class.java, HOBOM_LOGS.CREATED_AT).`as`("minute")
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
         return dsl.select(minuteField, DSL.count().`as`("total_requests"))
             .from(HOBOM_LOGS)
-            .where(HOBOM_LOGS.CREATED_AT.gt(oneHourAgo))
+            .where(HOBOM_LOGS.CREATED_AT.gt(since24HoursAgo))
             .groupBy(minuteField)
             .orderBy(minuteField.desc())
             .fetch()
