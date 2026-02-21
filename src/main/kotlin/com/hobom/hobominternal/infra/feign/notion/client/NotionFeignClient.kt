@@ -3,6 +3,7 @@ package com.hobom.hobominternal.infra.feign.notion.client
 import com.hobom.hobominternal.config.NotionFeignConfig
 import com.hobom.hobominternal.infra.feign.notion.dto.BlockChildrenResponse
 import com.hobom.hobominternal.infra.feign.notion.dto.DatabaseQueryResponse
+import com.hobom.hobominternal.infra.feign.notion.dto.NotionPage
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionQueryRequest
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,6 +23,11 @@ interface NotionFeignClient {
         @PathVariable databaseId: String,
         @RequestBody body: NotionQueryRequest,
     ): DatabaseQueryResponse
+
+    @GetMapping("/pages/{pageId}")
+    fun getPage(
+        @PathVariable pageId: String,
+    ): NotionPage
 
     @GetMapping("/blocks/{pageId}/children")
     fun getBlockChildren(

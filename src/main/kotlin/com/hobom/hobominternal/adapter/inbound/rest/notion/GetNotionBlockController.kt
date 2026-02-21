@@ -21,8 +21,8 @@ class GetNotionBlockController(
     fun findById(
         @PathVariable("pageId") id: String,
     ): ResponseEntity<BlockChildrenResponse> {
-        val blockChildrenString = getNotionBlockUseCase.invoke(id)
+        val result = getNotionBlockUseCase.invoke(id)
 
-        return ResponseEntity.ok(BlockChildrenResponse.from(blockChildrenString))
+        return ResponseEntity.ok(BlockChildrenResponse.from(result))
     }
 }

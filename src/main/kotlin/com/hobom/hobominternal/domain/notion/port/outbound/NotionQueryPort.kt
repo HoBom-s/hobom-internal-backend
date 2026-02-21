@@ -1,9 +1,10 @@
 package com.hobom.hobominternal.domain.notion.port.outbound
 
 import com.hobom.hobominternal.domain.notion.model.NotionArticlesResult
+import com.hobom.hobominternal.domain.notion.model.NotionBlockResult
 
 interface NotionQueryPort {
     fun getArticles(pageSize: Int, cursor: String?): NotionArticlesResult
 
-    fun getBlockMarkdownByPageId(id: String): String
+    fun getBlockByPageId(id: String): NotionBlockResult
 }

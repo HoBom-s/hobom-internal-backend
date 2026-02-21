@@ -1,5 +1,7 @@
 package com.hobom.hobominternal.domain.notion.port.inbound
 
+import com.hobom.hobominternal.domain.notion.model.NotionBlockResult
+
 interface GetNotionBlockUseCase {
-    fun invoke(id: String): String
+    fun invoke(id: String): NotionBlockResult
 }
