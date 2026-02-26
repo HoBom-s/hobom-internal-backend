@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody
     configuration = [HoBomBackendFeignConfig::class],
 )
 interface HoBomBackendFeignClient {
-    @PostMapping("/internal/notifications")
+    @PostMapping("/hobom-system-backend/internal/notifications")
     fun createNotification(
         @RequestBody request: CreateNotificationRequest,
     )
