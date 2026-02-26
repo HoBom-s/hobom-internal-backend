@@ -4,13 +4,17 @@ import com.hobom.hobominternal.domain.notification.model.NotificationRequest
 import com.hobom.hobominternal.domain.notification.port.outbound.SendNotificationPort
 import com.hobom.hobominternal.infra.feign.hobom.HoBomBackendFeignClient
 import com.hobom.hobominternal.infra.feign.hobom.dto.CreateNotificationRequest
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class SendNotificationAdapter(
     private val hobomBackendFeignClient: HoBomBackendFeignClient,
 ) : SendNotificationPort {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     override fun send(request: NotificationRequest) {
+        log.info("Calling for-hobom-backend: POST /internal/notifications, recipient: {}, category: {}", request.recipient, request.category)
         hobomBackendFeignClient.createNotification(
             CreateNotificationRequest(
                 category = request.category.value,
@@ -20,5 +24,6 @@ class SendNotificationAdapter(
                 senderId = request.senderId,
             ),
         )
+        log.info("for-hobom-backend notification created successfully for recipient: {}", request.recipient)
     }
 }
