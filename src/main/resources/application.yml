@@ -43,3 +43,6 @@ notion:
   token: ${HOBOM_TECH_BLOG_NOTION_KEY}
   database: ${HOBOM_TECH_BLOG_NOTION_DATABASE_ID}
   version: ${HOBOM_TECH_BLOG_NOTION_VERSION}
+
+hobom-backend:
+  url: ${HOBOM_BACKEND_URL}
