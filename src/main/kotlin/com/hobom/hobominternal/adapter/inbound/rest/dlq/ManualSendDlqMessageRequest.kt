@@ -4,15 +4,23 @@ import com.hobom.hobominternal.application.command.dlq.ManualSendMessageDlqComma
 import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
 import com.hobom.hobominternal.domain.message.model.MessageType
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Size
 
 @Schema(description = "Manual DLQ Send Retry")
 data class ManualSendDlqMessageRequest(
+    @field:NotBlank
+    @field:Size(max = 200)
     @Schema(description = "Message Title", example = "Today's menu recommendation")
     val title: String,
 
+    @field:NotBlank
+    @field:Size(max = 5000)
     @Schema(description = "Message Content", example = "Sushi")
     val body: String,
 
+    @field:NotBlank
+    @field:Size(max = 320)
     @Schema(description = "Recipient", example = "foxmon1524@gmail.com")
     val recipient: String,
 

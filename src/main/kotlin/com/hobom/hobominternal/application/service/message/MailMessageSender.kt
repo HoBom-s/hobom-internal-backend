@@ -4,6 +4,7 @@ import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCo
 import com.hobom.hobominternal.application.command.message.toMail
 import com.hobom.hobominternal.domain.mail.port.outbound.SendMailPort
 import com.hobom.hobominternal.domain.message.model.MessageType
+import com.hobom.hobominternal.shared.logging.MaskUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -19,7 +20,7 @@ class MailMessageSender(
 
     override fun send(command: DeliverHoBomMessageCommand) {
         if (!isValidEmail(command.recipient)) {
-            log.warn("Invalid email address: {}, skipping mail delivery", command.recipient)
+            log.warn("Invalid email address: {}, skipping mail delivery", MaskUtils.maskRecipient(command.recipient))
             return
         }
         sendMailPort.send(command.toMail())

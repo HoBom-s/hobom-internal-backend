@@ -28,7 +28,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: foxmon1524@gmail.com
+    username: ${HOBOM_MAIL_USERNAME}
     password: ${HOBOM_MAIL}
     properties:
       mail.smtp.auth: true
@@ -43,6 +43,10 @@ notion:
   token: ${HOBOM_TECH_BLOG_NOTION_KEY}
   database: ${HOBOM_TECH_BLOG_NOTION_DATABASE_ID}
   version: ${HOBOM_TECH_BLOG_NOTION_VERSION}
+
+hobom:
+  admin:
+    api-key: ${HOBOM_ADMIN_API_KEY}
 
 hobom-backend:
   url: ${HOBOM_BACKEND_URL}

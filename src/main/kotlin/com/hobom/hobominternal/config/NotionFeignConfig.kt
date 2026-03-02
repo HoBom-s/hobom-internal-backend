@@ -1,6 +1,7 @@
 package com.hobom.hobominternal.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import feign.Request
 import feign.RequestInterceptor
 import feign.RequestTemplate
 import feign.codec.Decoder
@@ -9,9 +10,8 @@ import feign.jackson.JacksonDecoder
 import feign.jackson.JacksonEncoder
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import java.util.concurrent.TimeUnit
 
-@Configuration
 class NotionFeignConfig(
     @Value("\${notion.token}") private val notionToken: String,
     @Value("\${notion.version}") private val notionVersion: String,
@@ -28,4 +28,13 @@ class NotionFeignConfig(
 
     @Bean
     fun feignDecoder(): Decoder = JacksonDecoder(objectMapper)
+
+    @Bean
+    fun notionFeignOptions(): Request.Options = Request.Options(
+        5,
+        TimeUnit.SECONDS,
+        30,
+        TimeUnit.SECONDS,
+        true,
+    )
 }

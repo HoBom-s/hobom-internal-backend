@@ -5,6 +5,7 @@ import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
 import com.hobom.hobominternal.domain.dlq.port.inbound.ManualSendMessageDlqUseCase
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +23,7 @@ class ManualSendDlqMessageController(
     @PostMapping("/dlqs/{id}/retry")
     fun manualSend(
         @PathVariable("id") id: Long,
-        @RequestBody request: ManualSendDlqMessageRequest,
+        @Valid @RequestBody request: ManualSendDlqMessageRequest,
     ): ResponseEntity<Unit> {
         val dlqMessageId = DlqMessageId(id)
         manualSendMessageDlqUseCase.invoke(request.toCommand(dlqMessageId))

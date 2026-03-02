@@ -5,12 +5,16 @@ import com.hobom.hobominternal.domain.dlq.port.inbound.FindAllDlqMessageUseCase
 import com.hobom.hobominternal.shared.page.PageResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@Validated
 @Tag(name = "DLQ", description = "HoBom System DLQ")
 @RestController
 @RequestMapping(HOBOM_INTERNAL_END_POINT_PREFIX)
@@ -20,8 +24,8 @@ class FindAllDlqMessageController(
     @Operation(summary = "Find all DLQ logs", description = "With pagination ( id desc )")
     @GetMapping("/dlqs")
     fun findAll(
-        @RequestParam("page") page: Int = 0,
-        @RequestParam("size") size: Int = 20,
+        @RequestParam("page") @Min(0) page: Int = 0,
+        @RequestParam("size") @Min(1) @Max(100) size: Int = 20,
     ): ResponseEntity<PageResponse<DlqMessageResponse>> {
         val queryResult = findAllDlqMessageUseCase.invoke(page, size)
         val response = PageResponse(

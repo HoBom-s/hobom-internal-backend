@@ -13,7 +13,7 @@ class WebConfig : WebMvcConfigurer {
                 "https://hobom-tech-blog.vercel.app",
             )
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-            .allowedHeaders("*")
+            .allowedHeaders("Content-Type", "Accept", "X-API-Key")
             .exposedHeaders("Location")
             .allowCredentials(false)
             .maxAge(3600)
