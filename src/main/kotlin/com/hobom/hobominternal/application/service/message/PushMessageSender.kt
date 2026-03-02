@@ -4,6 +4,7 @@ import com.hobom.hobominternal.application.command.message.DeliverHoBomMessageCo
 import com.hobom.hobominternal.application.command.message.toNotification
 import com.hobom.hobominternal.domain.message.model.MessageType
 import com.hobom.hobominternal.domain.notification.port.outbound.SendNotificationPort
+import com.hobom.hobominternal.shared.logging.MaskUtils
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -18,8 +19,8 @@ class PushMessageSender(
     }
 
     override fun send(command: DeliverHoBomMessageCommand) {
-        log.info("Sending push notification to recipient: {}, title: {}", command.recipient, command.title)
+        log.info("Sending push notification to recipient: {}, title: {}", MaskUtils.maskRecipient(command.recipient), command.title)
         sendNotificationPort.send(command.toNotification())
-        log.info("Push notification sent successfully to recipient: {}", command.recipient)
+        log.info("Push notification sent successfully to recipient: {}", MaskUtils.maskRecipient(command.recipient))
     }
 }

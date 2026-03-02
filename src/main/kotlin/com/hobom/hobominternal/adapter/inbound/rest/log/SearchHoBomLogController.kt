@@ -6,12 +6,15 @@ import com.hobom.hobominternal.shared.page.PageRequest
 import com.hobom.hobominternal.shared.page.PageResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.validation.Valid
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+@Validated
 @Tag(name = "HoBom Logs", description = "HoBom Logs")
 @RestController
 @RequestMapping(HOBOM_INTERNAL_END_POINT_PREFIX)
@@ -23,7 +26,7 @@ class SearchHoBomLogController(
     fun search(
         @ParameterObject
         request: HoBomLogSearchRequest,
-        @ParameterObject
+        @Valid @ParameterObject
         pageRequest: PageRequest,
     ): ResponseEntity<PageResponse<HoBomLogSearchResponse>> {
         val queryResult = searchHoBomLogUseCase.invoke(request.toCriteria(), pageRequest.page, pageRequest.size)

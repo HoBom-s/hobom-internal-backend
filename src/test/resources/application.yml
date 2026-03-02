@@ -1,0 +1,38 @@
+spring:
+  config:
+    import: optional:file:.env
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bear
+    username: hobom
+    password: test
+  flyway:
+    enabled: false
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test@test.com
+    password: test
+
+springdoc:
+  version: v1.0.0
+  swagger-ui:
+    path: /api-docs
+
+notion:
+  token: test-token
+  database: test-database-id
+  version: "2022-06-28"
+
+hobom:
+  admin:
+    api-key: test-api-key
+
+hobom-backend:
+  url: http://localhost:8080

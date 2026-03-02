@@ -55,6 +55,8 @@ class NotionQueryAdapter(
         val allBlocks = mutableListOf<NotionBlock>()
         var cursor: String? = null
         var hasMore: Boolean
+        var iterations = 0
+        val maxIterations = 50
 
         do {
             val blockChildren = notionFeignClient.getBlockChildren(
@@ -65,7 +67,8 @@ class NotionQueryAdapter(
             allBlocks += blockChildren.results
             cursor = blockChildren.next_cursor
             hasMore = blockChildren.has_more
-        } while (hasMore)
+            iterations++
+        } while (hasMore && iterations < maxIterations)
 
         return NotionBlockResult(
             title = title,
