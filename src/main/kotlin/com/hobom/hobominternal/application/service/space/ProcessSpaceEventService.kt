@@ -20,7 +20,7 @@ class ProcessSpaceEventService(
         if (!command.actorId.isNullOrBlank()) {
             sendNotificationPort.send(
                 NotificationRequest(
-                    category = NotificationCategory.NOTE,
+                    category = NotificationCategory.SYSTEM,
                     recipient = command.actorId,
                     title = "[${command.spaceKey}] ${command.entityType} ${command.action}",
                     body = command.title,
