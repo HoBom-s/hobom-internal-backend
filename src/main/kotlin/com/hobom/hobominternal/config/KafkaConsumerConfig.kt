@@ -56,6 +56,25 @@ class KafkaConsumerConfig(
         return factory
     }
 
+    @Bean(name = ["spaceEventKafkaListenerContainerFactory"])
+    fun spaceEventKafkaListenerContainerFactory(): ConcurrentKafkaListenerContainerFactory<String, String> {
+        val factory = ConcurrentKafkaListenerContainerFactory<String, String>()
+        factory.consumerFactory = createConsumerFactory("space-event-consumer-group")
+        factory.containerProperties.ackMode = AckMode.BATCH
+        factory.setCommonErrorHandler(
+            createErrorHandler { record, exception ->
+                log.error(
+                    "Space event consumer exhausted retries: topic={} partition={} offset={}",
+                    record.topic(),
+                    record.partition(),
+                    record.offset(),
+                    exception,
+                )
+            },
+        )
+        return factory
+    }
+
     private fun createConsumerFactory(groupId: String): ConsumerFactory<String, String> {
         val props = kafkaProperties.buildConsumerProperties().toMutableMap()
         props[ConsumerConfig.GROUP_ID_CONFIG] = groupId

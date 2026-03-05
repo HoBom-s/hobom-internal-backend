@@ -10,4 +10,9 @@ object KafkaTopics {
         const val TOPIC = "hobom.messages"
         const val GROUP = "message-consumer-group"
     }
+
+    object HoBomSpaceEvents {
+        const val TOPIC = "hobom.space-events"
+        const val GROUP = "space-event-consumer-group"
+    }
 }
