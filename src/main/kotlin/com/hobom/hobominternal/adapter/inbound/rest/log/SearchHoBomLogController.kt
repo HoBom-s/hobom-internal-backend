@@ -3,7 +3,8 @@ package com.hobom.hobominternal.adapter.inbound.rest.log
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
 import com.hobom.hobominternal.domain.log.port.inbound.SearchHoBomLogUseCase
 import com.hobom.hobominternal.shared.page.PageRequest
-import com.hobom.hobominternal.shared.page.PageResponse
+import com.hobom.hobominternal.shared.response.HttpResponse
+import com.hobom.hobominternal.shared.response.PaginatedItems
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -28,15 +29,15 @@ class SearchHoBomLogController(
         request: HoBomLogSearchRequest,
         @Valid @ParameterObject
         pageRequest: PageRequest,
-    ): ResponseEntity<PageResponse<HoBomLogSearchResponse>> {
+    ): ResponseEntity<HttpResponse<PaginatedItems<HoBomLogSearchResponse>>> {
         val queryResult = searchHoBomLogUseCase.invoke(request.toCriteria(), pageRequest.page, pageRequest.size)
-        val response = PageResponse(
-            page = pageRequest.page,
-            size = pageRequest.size,
-            total = queryResult.total,
-            content = queryResult.items.map { HoBomLogSearchResponse.from(it) },
+        val paginated = PaginatedItems(
+            items = queryResult.items.map { HoBomLogSearchResponse.from(it) },
+            totalCount = queryResult.total,
+            offset = pageRequest.page * pageRequest.size,
+            limit = pageRequest.size,
         )
 
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(HttpResponse.success(paginated))
     }
 }

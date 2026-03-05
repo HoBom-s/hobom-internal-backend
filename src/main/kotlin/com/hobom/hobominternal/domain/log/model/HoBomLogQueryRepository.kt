@@ -7,7 +7,13 @@ interface HoBomLogQueryRepository {
 
     fun findById(id: HoBomLogId): HoBomLog
 
-    fun countStatusCode(): List<LogStatusCount>
+    fun countStatusCode(hours: Int): List<LogStatusCount>
 
-    fun countRequestsGroupedByMinute(): List<RequestCount>
+    fun countRequestsGroupedByMinute(hours: Int): List<RequestCount>
+
+    fun countByLevel(hours: Int): List<LogLevelCount>
+
+    fun countByServiceType(hours: Int): List<ServiceTypeCount>
+
+    fun topErrorEndpoints(hours: Int, limit: Int): List<EndpointErrorCount>
 }

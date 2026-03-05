@@ -3,6 +3,7 @@ package com.hobom.hobominternal.adapter.inbound.rest.dlq
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
 import com.hobom.hobominternal.domain.dlq.model.DlqMessageId
 import com.hobom.hobominternal.domain.dlq.port.inbound.ManualSendMessageDlqUseCase
+import com.hobom.hobominternal.shared.response.HttpResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -24,10 +25,10 @@ class ManualSendDlqMessageController(
     fun manualSend(
         @PathVariable("id") id: Long,
         @Valid @RequestBody request: ManualSendDlqMessageRequest,
-    ): ResponseEntity<Unit> {
+    ): ResponseEntity<HttpResponse<Nothing?>> {
         val dlqMessageId = DlqMessageId(id)
         manualSendMessageDlqUseCase.invoke(request.toCommand(dlqMessageId))
 
-        return ResponseEntity.noContent().build()
+        return ResponseEntity.ok(HttpResponse.success(null, "DLQ message retried successfully"))
     }
 }

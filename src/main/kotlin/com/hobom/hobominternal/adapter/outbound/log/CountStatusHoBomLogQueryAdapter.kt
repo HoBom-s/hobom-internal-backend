@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class CountStatusHoBomLogQueryAdapter(
     private val hobomLogQueryRepository: HoBomLogQueryRepository,
 ) : CountStatusHoBomLogQueryPort {
-    override fun count(): List<LogStatusCount> {
-        return hobomLogQueryRepository.countStatusCode()
+    override fun count(hours: Int): List<LogStatusCount> {
+        return hobomLogQueryRepository.countStatusCode(hours)
     }
 }

@@ -2,7 +2,8 @@ package com.hobom.hobominternal.adapter.inbound.rest.dlq
 
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
 import com.hobom.hobominternal.domain.dlq.port.inbound.FindAllDlqMessageUseCase
-import com.hobom.hobominternal.shared.page.PageResponse
+import com.hobom.hobominternal.shared.response.HttpResponse
+import com.hobom.hobominternal.shared.response.PaginatedItems
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.Max
@@ -26,15 +27,15 @@ class FindAllDlqMessageController(
     fun findAll(
         @RequestParam("page") @Min(0) page: Int = 0,
         @RequestParam("size") @Min(1) @Max(100) size: Int = 20,
-    ): ResponseEntity<PageResponse<DlqMessageResponse>> {
+    ): ResponseEntity<HttpResponse<PaginatedItems<DlqMessageResponse>>> {
         val queryResult = findAllDlqMessageUseCase.invoke(page, size)
-        val response = PageResponse(
-            page = page,
-            size = size,
-            total = queryResult.total,
-            content = queryResult.items.map { DlqMessageResponse.from(it) },
+        val paginated = PaginatedItems(
+            items = queryResult.items.map { DlqMessageResponse.from(it) },
+            totalCount = queryResult.total,
+            offset = page * size,
+            limit = size,
         )
 
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(HttpResponse.success(paginated))
     }
 }
