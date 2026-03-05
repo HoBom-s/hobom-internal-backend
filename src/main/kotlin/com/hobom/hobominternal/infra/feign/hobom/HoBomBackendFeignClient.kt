@@ -20,7 +20,7 @@ interface HoBomBackendFeignClient {
         @RequestBody request: CreateNotificationRequest,
     )
 
-    @GetMapping("/hobom-system-backend/internal/users")
+    @GetMapping("/hobom-system-backend/internal/users/{nickname}")
     fun getUserInfoByNickname(@PathVariable("nickname") nickname: String): HttpResponse<UserInfo>
 
     data class UserInfo(
