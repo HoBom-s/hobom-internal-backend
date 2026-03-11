@@ -15,6 +15,10 @@ class SendNotificationAdapter(
     private val log = LoggerFactory.getLogger(javaClass)
 
     override fun send(request: NotificationRequest) {
+        if (request.body.isNullOrBlank()) {
+            log.info("Skipping notification: body is empty, recipient: {}, category: {}", MaskUtils.maskRecipient(request.recipient), request.category)
+            return
+        }
         log.info("Calling for-hobom-backend: POST /internal/notifications, recipient: {}, category: {}", MaskUtils.maskRecipient(request.recipient), request.category)
         hobomBackendFeignClient.createNotification(
             CreateNotificationRequest(
