@@ -2,6 +2,7 @@ package com.hobom.hobominternal.adapter.inbound.rest.notion
 
 import com.hobom.hobominternal.adapter.inbound.prefix.HOBOM_INTERNAL_END_POINT_PREFIX
 import com.hobom.hobominternal.domain.notion.port.inbound.GetNotionArticlesUseCase
+import com.hobom.hobominternal.shared.response.HttpResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
@@ -21,10 +22,10 @@ class GetNotionArticlesController(
     fun findAll(
         @RequestParam(defaultValue = "10") pageSize: Int,
         @RequestParam(required = false) cursor: String?,
-    ): ResponseEntity<ArticleResponse> {
+    ): ResponseEntity<HttpResponse<ArticleResponse>> {
         val databaseQueryResponse = getNotionArticlesUseCase.invoke(pageSize, cursor)
         val response = ArticleResponse.from(databaseQueryResponse)
 
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(HttpResponse.success(response))
     }
 }

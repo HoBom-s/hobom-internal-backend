@@ -26,6 +26,7 @@ abstract class HoBomBufferedKafkaConsumer<T : Any>(
             flushIfNeeded()
         } catch (e: Exception) {
             log.error("Failed to consume record topic={} partition={} offset={}", record.topic(), record.partition(), record.offset(), e)
+            throw e
         }
     }
 

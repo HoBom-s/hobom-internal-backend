@@ -8,8 +8,6 @@ import org.jooq.DSLContext
 import org.jooq.InsertSetStep
 import org.jooq.JSON
 import org.jooq.Query
-import org.jooq.Record
-import org.jooq.generated.tables.MessageDlqs
 import org.jooq.generated.tables.records.MessageDlqsRecord
 import org.jooq.generated.tables.references.MESSAGE_DLQS
 import java.time.ZoneOffset
@@ -61,18 +59,18 @@ object DlqMessageSqlMapper {
     }
 }
 
-fun Record.toDomain(): DlqMessage = DlqMessage(
-    id = this[MessageDlqs.MESSAGE_DLQS.ID]?.let { DlqMessageId(it) } ?: DlqMessageId(0),
-    topic = this[MessageDlqs.MESSAGE_DLQS.TOPIC]!!,
-    partition = this[MessageDlqs.MESSAGE_DLQS.PARTITION]!!,
-    kafkaOffset = this[MessageDlqs.MESSAGE_DLQS.KAFKA_OFFSET]!!,
-    key = this[MessageDlqs.MESSAGE_DLQS.KEY],
-    value = this[MessageDlqs.MESSAGE_DLQS.VALUE]!!.toString(),
-    traceId = this[MessageDlqs.MESSAGE_DLQS.TRACE_ID],
-    messageType = this[MessageDlqs.MESSAGE_DLQS.MESSAGE_TYPE],
-    errorMessage = this[MessageDlqs.MESSAGE_DLQS.ERROR_MESSAGE],
-    retryCount = this[MessageDlqs.MESSAGE_DLQS.RETRY_COUNT]!!,
-    status = DlqStatus.valueOf(this[MessageDlqs.MESSAGE_DLQS.STATUS]!!),
-    lastAttemptedAt = this[MessageDlqs.MESSAGE_DLQS.LAST_ATTEMPTED_AT]?.toInstant(),
-    createdAt = this[MessageDlqs.MESSAGE_DLQS.CREATED_AT]!!.toInstant(),
+fun MessageDlqsRecord.toDomain(): DlqMessage = DlqMessage(
+    id = this.id?.let { DlqMessageId(it) } ?: error("message_dlqs.id must not be null"),
+    topic = this.topic ?: error("message_dlqs.topic must not be null for id=${this.id}"),
+    partition = this.partition ?: error("message_dlqs.partition must not be null for id=${this.id}"),
+    kafkaOffset = this.kafkaOffset ?: error("message_dlqs.kafka_offset must not be null for id=${this.id}"),
+    key = this.key,
+    value = this.value?.toString() ?: error("message_dlqs.value must not be null for id=${this.id}"),
+    traceId = this.traceId,
+    messageType = this.messageType,
+    errorMessage = this.errorMessage,
+    retryCount = this.retryCount ?: error("message_dlqs.retry_count must not be null for id=${this.id}"),
+    status = DlqStatus.valueOf(this.status ?: error("message_dlqs.status must not be null for id=${this.id}")),
+    lastAttemptedAt = this.lastAttemptedAt?.toInstant(),
+    createdAt = this.createdAt?.toInstant() ?: error("message_dlqs.created_at must not be null for id=${this.id}"),
 )

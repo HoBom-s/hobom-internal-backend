@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 class CountRequestHoBomLogGroupQueryAdapter(
     private val hobomLogQueryRepository: HoBomLogQueryRepository,
 ) : CountRequestHoBomLogGroupQueryPort {
-    override fun count(): List<RequestCount> {
-        return hobomLogQueryRepository.countRequestsGroupedByMinute()
+    override fun count(hours: Int): List<RequestCount> {
+        return hobomLogQueryRepository.countRequestsGroupedByMinute(hours)
     }
 }

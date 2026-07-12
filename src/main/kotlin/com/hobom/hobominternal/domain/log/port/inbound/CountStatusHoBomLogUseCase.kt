@@ -3,5 +3,5 @@ package com.hobom.hobominternal.domain.log.port.inbound
 import com.hobom.hobominternal.domain.log.model.LogStatusCount
 
 interface CountStatusHoBomLogUseCase {
-    fun invoke(): List<LogStatusCount>
+    fun invoke(hours: Int): List<LogStatusCount>
 }

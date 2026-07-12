@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class CountStatusHoBomLogService(
     private val countStatusHoBomLogQueryPort: CountStatusHoBomLogQueryPort,
 ) : CountStatusHoBomLogUseCase {
-    override fun invoke(): List<LogStatusCount> {
-        return countStatusHoBomLogQueryPort.count()
+    override fun invoke(hours: Int): List<LogStatusCount> {
+        return countStatusHoBomLogQueryPort.count(hours)
     }
 }

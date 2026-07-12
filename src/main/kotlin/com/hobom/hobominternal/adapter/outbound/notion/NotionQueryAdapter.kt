@@ -2,6 +2,7 @@ package com.hobom.hobominternal.adapter.outbound.notion
 
 import com.hobom.hobominternal.domain.notion.model.NotionArticle
 import com.hobom.hobominternal.domain.notion.model.NotionArticlesResult
+import com.hobom.hobominternal.domain.notion.model.NotionBlockResult
 import com.hobom.hobominternal.domain.notion.port.outbound.NotionQueryPort
 import com.hobom.hobominternal.infra.feign.notion.client.NotionFeignClient
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionBlock
@@ -46,22 +47,33 @@ class NotionQueryAdapter(
         )
     }
 
-    override fun getBlockMarkdownByPageId(id: String): String {
-        val all = mutableListOf<NotionBlock>()
+    override fun getBlockByPageId(id: String): NotionBlockResult {
+        val page = notionFeignClient.getPage(id)
+        val title = page.properties["Page"]?.title?.firstOrNull()?.plain_text.orEmpty()
+        val tags = page.properties["Tag"]?.multi_select?.map { it.name } ?: emptyList()
+
+        val allBlocks = mutableListOf<NotionBlock>()
         var cursor: String? = null
         var hasMore: Boolean
+        var iterations = 0
+        val maxIterations = 50
 
         do {
-            val page = notionFeignClient.getBlockChildren(
+            val blockChildren = notionFeignClient.getBlockChildren(
                 blockId = id,
                 startCursor = cursor,
                 pageSize = 100,
             )
-            all += page.results
-            cursor = page.next_cursor
-            hasMore = page.has_more
-        } while (hasMore)
+            allBlocks += blockChildren.results
+            cursor = blockChildren.next_cursor
+            hasMore = blockChildren.has_more
+            iterations++
+        } while (hasMore && iterations < maxIterations)
 
-        return NotionMarkdownFormatter.convertToMarkdown(all)
+        return NotionBlockResult(
+            title = title,
+            tags = tags,
+            contents = NotionMarkdownFormatter.convertToMarkdown(allBlocks),
+        )
     }
 }

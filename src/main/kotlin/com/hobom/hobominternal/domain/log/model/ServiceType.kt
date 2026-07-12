@@ -9,6 +9,7 @@ enum class ServiceType(
     HOBOM_BACKEND("HOBOM_BACKEND", "hobom-backend-server"),
     HOBOM_API_GATEWAY("HOBOM_API_GATEWAY", "hobom-api-gateway"),
     HOBOM_MESSAGE_DELIVERY("HOBOM_MESSAGE_DELIVERY", "hobom-message-delivery"),
+    HOBOM_SPACE("HOBOM_SPACE", "hobom-space-backend"),
     ;
 
     override fun toString(): String = value

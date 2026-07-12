@@ -12,7 +12,6 @@ import org.jooq.generated.tables.references.HOBOM_LOGS
 import org.postgresql.util.PGobject
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.sql.Timestamp
-import java.time.Instant
 import java.time.ZoneId
 
 object HoBomLogSqlMapper {
@@ -40,20 +39,26 @@ object HoBomLogSqlMapper {
             .addValue("timestamp", Timestamp.from(it.timestamp))
     }.toTypedArray()
 
-    fun fromRecord(record: HobomLogsRecord): HoBomLog = HoBomLog(
-        id = record[HOBOM_LOGS.ID]?.let { HoBomLogId(it) },
-        serviceType = ServiceType.valueOf(record[HOBOM_LOGS.SERVICE_TYPE].toString()),
-        level = HoBomLogLevel.valueOf(record[HOBOM_LOGS.LEVEL].toString()),
-        traceId = record[HOBOM_LOGS.TRACE_ID] ?: "",
-        message = record[HOBOM_LOGS.MESSAGE] ?: "",
-        httpMethod = HttpMethodType.valueOf(record[HOBOM_LOGS.HTTP_METHOD].toString()),
-        path = record[HOBOM_LOGS.PATH],
-        statusCode = record[HOBOM_LOGS.STATUS_CODE] ?: 200,
-        host = record[HOBOM_LOGS.HOST] ?: "",
-        userId = record[HOBOM_LOGS.USER_ID] ?: "",
-        payload = JsonUtil.parseJson(record[HOBOM_LOGS.PAYLOAD].toString()),
-        timestamp = record[HOBOM_LOGS.TIMESTAMP]?.atZone(ZoneId.systemDefault())?.toInstant() ?: Instant.now(),
-        createdAt = record[HOBOM_LOGS.CREATED_AT]?.atZone(ZoneId.systemDefault())?.toInstant() ?: Instant.now(),
-        updatedAt = record[HOBOM_LOGS.UPDATED_AT]?.atZone(ZoneId.systemDefault())?.toInstant() ?: Instant.now(),
-    )
+    fun fromRecord(record: HobomLogsRecord): HoBomLog {
+        val id = record[HOBOM_LOGS.ID]
+        return HoBomLog(
+            id = id?.let { HoBomLogId(it) },
+            serviceType = ServiceType.valueOf(record[HOBOM_LOGS.SERVICE_TYPE].toString()),
+            level = HoBomLogLevel.valueOf(record[HOBOM_LOGS.LEVEL].toString()),
+            traceId = record[HOBOM_LOGS.TRACE_ID] ?: "",
+            message = record[HOBOM_LOGS.MESSAGE] ?: "",
+            httpMethod = HttpMethodType.valueOf(record[HOBOM_LOGS.HTTP_METHOD].toString()),
+            path = record[HOBOM_LOGS.PATH],
+            statusCode = record[HOBOM_LOGS.STATUS_CODE] ?: 200,
+            host = record[HOBOM_LOGS.HOST] ?: "",
+            userId = record[HOBOM_LOGS.USER_ID] ?: "",
+            payload = record[HOBOM_LOGS.PAYLOAD]?.let { JsonUtil.parseJson(it.toString()) },
+            timestamp = record[HOBOM_LOGS.TIMESTAMP]?.atZone(ZoneId.systemDefault())?.toInstant()
+                ?: error("hobom_logs.timestamp is null for id=$id"),
+            createdAt = record[HOBOM_LOGS.CREATED_AT]?.atZone(ZoneId.systemDefault())?.toInstant()
+                ?: error("hobom_logs.created_at is null for id=$id"),
+            updatedAt = record[HOBOM_LOGS.UPDATED_AT]?.atZone(ZoneId.systemDefault())?.toInstant()
+                ?: error("hobom_logs.updated_at is null for id=$id"),
+        )
+    }
 }
