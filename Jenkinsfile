@@ -7,5 +7,7 @@ hobomPipeline(
   cpus:           '2',
   envPath:        '/etc/hobom-dev/dev-hobom-internal-backend/.env',
   addHost:        true,
-  smokeCheckPath: '/actuator/health'
+  smokeCheckPath: '/actuator/health',
+  liveHostPort:   '18081',
+  liveEnvPath:    '/etc/hobom-live/live-hobom-internal-backend/.env'
 )
