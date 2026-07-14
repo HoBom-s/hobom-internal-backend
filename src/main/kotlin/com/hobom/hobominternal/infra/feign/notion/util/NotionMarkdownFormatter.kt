@@ -24,6 +24,13 @@ object NotionMarkdownFormatter {
                         val code = block.code?.rich_text?.toPlainText()
                         appendLine("```$lang\n$code\n```")
                     }
+                    "image" -> {
+                        val url = block.image?.external?.url ?: block.image?.file?.url
+                        if (!url.isNullOrBlank()) {
+                            val alt = block.image?.caption?.toPlainText().orEmpty()
+                            appendLine("![$alt]($url)")
+                        }
+                    }
                     else -> {} // 무시
                 }
             }
