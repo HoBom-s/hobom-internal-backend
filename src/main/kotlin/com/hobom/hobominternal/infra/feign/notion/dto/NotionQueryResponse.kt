@@ -31,6 +31,20 @@ data class NotionBlock(
     val code: NotionCodeBlock? = null,
     val quote: NotionRichTextBlock? = null,
     val to_do: NotionToDoBlock? = null,
+    val image: NotionImageBlock? = null,
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class NotionImageBlock(
+    val type: String,
+    val external: NotionFileRef? = null,
+    val file: NotionFileRef? = null,
+    val caption: List<NotionText> = emptyList(),
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class NotionFileRef(
+    val url: String,
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

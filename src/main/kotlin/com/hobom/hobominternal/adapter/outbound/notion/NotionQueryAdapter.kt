@@ -4,6 +4,7 @@ import com.hobom.hobominternal.domain.notion.model.NotionArticle
 import com.hobom.hobominternal.domain.notion.model.NotionArticlesResult
 import com.hobom.hobominternal.domain.notion.model.NotionBlockResult
 import com.hobom.hobominternal.domain.notion.port.outbound.NotionQueryPort
+import com.hobom.hobominternal.exception.ArticleNotFoundException
 import com.hobom.hobominternal.infra.feign.notion.client.NotionFeignClient
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionBlock
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionQueryRequest
@@ -75,5 +76,22 @@ class NotionQueryAdapter(
             tags = tags,
             contents = NotionMarkdownFormatter.convertToMarkdown(allBlocks),
         )
+    }
+
+    override fun getBlockBySlug(slug: String): NotionBlockResult {
+        val request = NotionQueryRequest(
+            page_size = 1,
+            start_cursor = null,
+            filter = mapOf(
+                "and" to listOf(
+                    mapOf("property" to "Published", "checkbox" to mapOf("equals" to true)),
+                    mapOf("property" to "Slug", "rich_text" to mapOf("equals" to slug)),
+                ),
+            ),
+        )
+        val page = notionFeignClient.getDatabase(databaseId, request).results.firstOrNull()
+            ?: throw ArticleNotFoundException(slug)
+
+        return getBlockByPageId(page.id)
     }
 }
