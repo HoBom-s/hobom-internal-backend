@@ -1,5 +1,6 @@
 package com.hobom.hobominternal.adapter.outbound.notion
 
+import com.hobom.hobominternal.config.CacheConfig
 import com.hobom.hobominternal.domain.notion.model.NotionArticle
 import com.hobom.hobominternal.domain.notion.model.NotionArticlesResult
 import com.hobom.hobominternal.domain.notion.model.NotionBlockResult
@@ -10,6 +11,7 @@ import com.hobom.hobominternal.infra.feign.notion.dto.NotionBlock
 import com.hobom.hobominternal.infra.feign.notion.dto.NotionQueryRequest
 import com.hobom.hobominternal.infra.feign.notion.util.NotionMarkdownFormatter
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,6 +21,7 @@ class NotionQueryAdapter(
     @Value("\${notion.database}")
     private lateinit var databaseId: String
 
+    @Cacheable(CacheConfig.NOTION_ARTICLES)
     override fun getArticles(pageSize: Int, cursor: String?): NotionArticlesResult {
         val request = NotionQueryRequest(
             page_size = pageSize,
@@ -48,6 +51,7 @@ class NotionQueryAdapter(
         )
     }
 
+    @Cacheable(CacheConfig.NOTION_BLOCK)
     override fun getBlockByPageId(id: String): NotionBlockResult {
         val page = notionFeignClient.getPage(id)
         val title = page.properties["Page"]?.title?.firstOrNull()?.plain_text.orEmpty()
@@ -78,6 +82,7 @@ class NotionQueryAdapter(
         )
     }
 
+    @Cacheable(CacheConfig.NOTION_ARTICLE_BY_SLUG)
     override fun getBlockBySlug(slug: String): NotionBlockResult {
         val request = NotionQueryRequest(
             page_size = 1,

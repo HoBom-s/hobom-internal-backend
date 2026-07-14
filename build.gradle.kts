@@ -62,6 +62,8 @@ dependencies {
     implementation("io.github.openfeign:feign-jackson:13.2")
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("com.github.ben-manes.caffeine:caffeine")
 
     // jOOQ Codegen runtime
     jooqGenerator("org.jooq:jooq-codegen:3.20.5")
